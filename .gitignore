@@ -1,0 +1,13 @@
+# Fichiers de build (très important)
+**/target/
+**/*.jar
+
+# Paramètres IntelliJ
+.idea/
+*.iml
+
+# Docker
+.docker/
+
+# Divers
+.DS_Store
