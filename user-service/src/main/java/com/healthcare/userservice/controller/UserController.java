@@ -49,4 +49,12 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+    // NOUVEAU : On utilise le service pour chercher un utilisateur par son pseudo
+    @GetMapping("/search/{username}")
+    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+        return userService.getUserByUsername(username)
+                .map(ResponseEntity::ok) // Si trouvé, on renvoie 200 OK avec l'utilisateur
+                .orElse(ResponseEntity.notFound().build()); // Si pas trouvé, on renvoie 404
+    }
 }

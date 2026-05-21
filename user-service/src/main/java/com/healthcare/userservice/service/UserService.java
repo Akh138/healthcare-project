@@ -22,6 +22,11 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    // NOUVEAU : Méthode pour chercher par nom d'utilisateur (utilisé pour le login)
+    public Optional<User> getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     public User createUser(User user) {
         return userRepository.save(user);
     }
@@ -31,7 +36,7 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
         user.setUsername(userDetails.getUsername());
-        user.setPassword(userDetails.getPassword()); // Plus tard on pourra crypter le MDP
+        user.setPassword(userDetails.getPassword());
         user.setRole(userDetails.getRole());
 
         return userRepository.save(user);
