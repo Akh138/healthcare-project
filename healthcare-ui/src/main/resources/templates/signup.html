@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Inscription - Healthcare</title>
+</head>
+<body>
+<h2>Créer un compte Médecin</h2>
+
+<form th:action="@{/signup}" th:object="${user}" method="post">
+    <div>
+        <label>Nom d'utilisateur :</label>
+        <input type="text" th:field="*{username}" required />
+    </div>
+    <div>
+        <label>Mot de passe :</label>
+        <input type="password" th:field="*{password}" required />
+    </div>
+    <div>
+        <label>Rôle :</label>
+        <select th:field="*{role}">
+            <option value="DOCTOR">Médecin</option>
+            <option value="ADMIN">Administrateur</option>
+        </select>
+    </div>
+    <button type="submit">S'enregistrer</button>
+</form>
+
+<p>Déjà un compte ? <a href="/login">Connectez-vous ici</a></p>
+</body>
+</html>

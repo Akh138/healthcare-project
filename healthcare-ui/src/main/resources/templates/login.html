@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Connexion - Healthcare</title>
+</head>
+<body>
+<h2>Connexion Médecin</h2>
+
+<!-- Message de succès après inscription -->
+<div th:if="${param.success}" style="color: green;">
+    Votre compte a été créé avec succès ! Connectez-vous.
+</div>
+
+<!-- Message d'erreur si mauvais mot de passe -->
+<div th:if="${param.error}" style="color: red;">
+    Nom d'utilisateur ou mot de passe incorrect.
+</div>
+
+<form th:action="@{/login}" method="post">
+    <div>
+        <label>Nom d'utilisateur :</label>
+        <input type="text" name="username" required />
+    </div>
+    <div>
+        <label>Mot de passe :</label>
+        <input type="password" name="password" required />
+    </div>
+    <button type="submit">Se connecter</button>
+</form>
+
+<p>Pas encore de compte ? <a href="/signup">Inscrivez-vous ici</a></p>
+</body>
+</html>
