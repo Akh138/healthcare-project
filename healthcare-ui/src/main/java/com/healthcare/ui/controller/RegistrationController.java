@@ -3,6 +3,7 @@ package com.healthcare.ui.controller;
 import com.healthcare.ui.model.UserDTO;
 import com.healthcare.ui.proxies.UserProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,32 +16,42 @@ public class RegistrationController {
     @Autowired
     private UserProxy userProxy;
 
-    // Affiche le formulaire d'inscription
+    @Autowired
+    private PasswordEncoder passwordEncoder; // On injecte BCrypt ici
+
     @GetMapping("/signup")
     public String showSignUpForm(Model model) {
         model.addAttribute("user", new UserDTO());
         return "signup";
     }
 
-    // Reçoit les données du formulaire quand on clique sur "S'enregistrer"
     @PostMapping("/signup")
     public String registerUser(@ModelAttribute("user") UserDTO user) {
-        // LOG DE DEBUG : On vérifie dans la console d'IntelliJ si on reçoit bien l'utilisateur
-        System.out.println("Tentative d'inscription pour l'utilisateur : " + user.getUsername());
+        System.out.println("Inscription BCrypt pour : " + user.getUsername());
 
         try {
-            userProxy.createUser(user); // Envoi au microservice via Feign
-            System.out.println("Inscription réussie via Feign !");
+            // 1. ON HACHE LE MOT DE PASSE avant de l'envoyer
+            // password123 devient par exemple : $2a$10$X87...
+            String encodedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(encodedPassword);
+
+            // 2. On envoie l'utilisateur avec son mot de passe crypté au microservice
+            userProxy.createUser(user);
+            System.out.println("Utilisateur enregistré avec succès (Mot de passe haché)");
         } catch (Exception e) {
-            System.out.println("ERREUR lors de l'appel au microservice : " + e.getMessage());
+            System.out.println("ERREUR Feign : " + e.getMessage());
         }
 
         return "redirect:/login?success";
     }
 
-    // On ajoute cette méthode pour que la redirection vers /login ne crash pas
     @GetMapping("/login")
     public String login() {
-        return "login"; // Il faudra créer un fichier login.html plus tard
+        return "login";
+    }
+
+    @GetMapping("/home")
+    public String home() {
+        return "home";
     }
 }

@@ -18,19 +18,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // 1. On désactive le CSRF pour que le formulaire de signup fonctionne sans jeton
+                // On désactive le CSRF pour que nos formulaires POST fonctionnent facilement
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        // 2. On autorise tout le monde à voir l'inscription et la connexion
+                        // On autorise l'accès libre aux pages de base
                         .requestMatchers("/signup", "/login", "/css/**", "/js/**").permitAll()
-                        // 3. Le reste de l'application demande d'être connecté
+                        // Tout le reste demande d'être connecté
                         .anyRequest().authenticated()
                 )
 
                 .formLogin(form -> form
-                        .loginPage("/login")             // On dit à Spring que notre page de login est sur /login
-                        .defaultSuccessUrl("/home", true) // Où aller si on réussit à se connecter
+                        .loginPage("/login")             // Notre page de login
+                        .defaultSuccessUrl("/home", true) // Redirection vers home après connexion
                         .permitAll()
                 )
 
@@ -39,7 +39,6 @@ public class SecurityConfig {
                         .permitAll()
                 )
 
-                // 4. Gestion de la session (demandé par le prof)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 );
@@ -47,13 +46,12 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // Le "Bean d'authentification" (demandé par le prof)
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
 
-    // Outil pour crypter les mots de passe (obligatoire pour Security)
+    // ON UTILISE BCRYPT : Le standard pro pour hacher les mots de passe
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
