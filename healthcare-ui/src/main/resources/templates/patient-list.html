@@ -1,33 +1,64 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Liste des Patients</title>
+    <meta charset="UTF-8">
+    <title>Patients - Healthcare</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
-<h2>Gestion des Patients</h2>
-<a href="/patients/add">➕ Ajouter un nouveau patient</a>
-<br><br>
-<table border="1">
-    <thead>
-    <tr>
-        <th>Nom</th>
-        <th>Prénom</th>
-        <th>Genre</th>
-        <th>Date de Naissance</th>
-        <th>Email</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="p : ${patients}">
-        <td th:text="${p.lastName}"></td>
-        <td th:text="${p.firstName}"></td>
-        <td th:text="${p.gender}"></td>
-        <td th:text="${p.birthday}"></td>
-        <td th:text="${p.email}"></td>
-    </tr>
-    </tbody>
-</table>
-<br>
-<a href="/home">Retour à l'accueil</a>
+<body style="display: flex; flex-direction: column; align-items: center; padding-top: 50px;">
+
+<div class="container-large">
+    <!-- En-tête du tableau -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div>
+            <h2 style="text-align: left; margin: 0;">Répertoire des Patients</h2>
+            <p style="color: var(--text-light); margin: 5px 0 0 0; font-size: 0.9rem;">Consultez et gérez les dossiers patients</p>
+        </div>
+        <a href="/patients/add" class="btn-primary" style="width: auto; padding: 12px 24px;">
+            <i class="fa-solid fa-user-plus"></i> Nouveau Patient
+        </a>
+    </div>
+
+    <!-- Le Tableau -->
+    <table>
+        <thead>
+        <tr>
+            <th><i class="fa-solid fa-id-card"></i> Identité</th>
+            <th><i class="fa-solid fa-venus-mars"></i> Genre</th>
+            <th><i class="fa-solid fa-cake-candles"></i> Naissance</th>
+            <th><i class="fa-solid fa-envelope"></i> Email</th>
+            <th><i class="fa-solid fa-phone"></i> Téléphone</th>
+            <th style="text-align: center;">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${patients}">
+            <td>
+                <div style="font-weight: 700; color: var(--text-main);" th:text="${p.lastName.toUpperCase() + ' ' + p.firstName}"></div>
+            </td>
+            <td>
+                <span class="badge" th:text="${p.gender}"></span>
+            </td>
+            <td th:text="${p.birthday}"></td>
+            <td th:text="${p.email != null ? p.email : '-'}"></td>
+            <td th:text="${p.phone != null ? p.phone : '-'}"></td>
+            <td style="text-align: center; font-size: 1.1rem; display: flex; gap: 15px; justify-content: center;">
+                <i class="fa-solid fa-eye" style="color: #3498db; cursor: pointer;" title="Voir dossier"></i>
+                <i class="fa-solid fa-pen-to-square" style="color: #f39c12; cursor: pointer;" title="Modifier"></i>
+                <i class="fa-solid fa-trash" style="color: #e74c3c; cursor: pointer;" title="Supprimer"></i>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Pied de page -->
+    <div style="margin-top: 30px; border-top: 1px solid #f1f5f9; padding-top: 20px;">
+        <a href="/home" style="text-decoration: none; color: var(--text-light); font-weight: 600; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+        </a>
+    </div>
+</div>
+
 </body>
 </html>

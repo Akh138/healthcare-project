@@ -1,21 +1,79 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Ajouter un Patient</title>
+    <meta charset="UTF-8">
+    <title>Nouveau Patient - Healthcare</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<h2>Nouveau Patient</h2>
-<form th:action="@{/patients/add}" th:object="${patient}" method="post">
-    <label>Nom :</label> <input type="text" th:field="*{lastName}" required /><br>
-    <label>Prénom :</label> <input type="text" th:field="*{firstName}" required /><br>
-    <label>Date Naissance (YYYY-MM-DD) :</label> <input type="text" th:field="*{birthday}" required /><br>
-    <label>Genre (M/F) :</label> <input type="text" th:field="*{gender}" required /><br>
-    <label>Email :</label> <input type="email" th:field="*{email}" /><br>
-    <label>Téléphone :</label> <input type="text" th:field="*{phone}" /><br>
-    <label>Adresse :</label> <input type="text" th:field="*{address}" /><br>
-    <button type="submit">Enregistrer le patient</button>
-</form>
-<br>
-<a href="/patients">Annuler</a>
+<div class="container-card" style="max-width: 550px;">
+    <!-- Logo Pouls Blanc sur fond Bleu -->
+    <div class="brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 35px; height: 35px;">
+            <path d="M2 12H5L8 20L12 4L15 15L17 12H22" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
+
+    <h2>Nouveau Dossier Patient</h2>
+    <p class="subtitle">Veuillez remplir les informations du patient</p>
+
+    <form th:action="@{/patients/add}" th:object="${patient}" method="post">
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="input-group">
+                <label>Nom</label>
+                <i class="fa-solid fa-id-card"></i>
+                <input type="text" th:field="*{lastName}" class="form-control" placeholder="NOM" required />
+            </div>
+            <div class="input-group">
+                <label>Prénom</label>
+                <i class="fa-solid fa-user"></i>
+                <input type="text" th:field="*{firstName}" class="form-control" placeholder="Prénom" required />
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="input-group">
+                <label>Date de Naissance</label>
+                <i class="fa-solid fa-calendar-days"></i>
+                <!-- Utilisation du type="date" pour éviter les erreurs de format -->
+                <input type="date" th:field="*{birthday}" class="form-control" required />
+            </div>
+            <div class="input-group">
+                <label>Genre</label>
+                <i class="fa-solid fa-venus-mars"></i>
+                <select th:field="*{gender}" class="form-control" style="padding-left: 45px;">
+                    <option value="M">Masculin</option>
+                    <option value="F">Féminin</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Email</label>
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" th:field="*{email}" class="form-control" placeholder="patient@email.com" />
+        </div>
+
+        <div class="input-group">
+            <label>Téléphone</label>
+            <i class="fa-solid fa-phone"></i>
+            <input type="text" th:field="*{phone}" class="form-control" placeholder="06 00 00 00 00" />
+        </div>
+
+        <div class="input-group">
+            <label>Adresse</label>
+            <i class="fa-solid fa-location-dot"></i>
+            <input type="text" th:field="*{address}" class="form-control" placeholder="Adresse complète" />
+        </div>
+
+        <button type="submit" class="btn-primary">CRÉER LE DOSSIER</button>
+    </form>
+
+    <div class="footer-link">
+        <a href="/patients" style="color: var(--text-light);"><i class="fa-solid fa-arrow-left"></i> Annuler et retourner à la liste</a>
+    </div>
+</div>
 </body>
 </html>

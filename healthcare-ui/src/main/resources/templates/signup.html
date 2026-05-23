@@ -1,30 +1,55 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Inscription - Healthcare</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <!-- On ajoute FontAwesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<h2>Créer un compte Médecin</h2>
+<div class="container-card">
+    <!-- On remet le logo qui pulse -->
+    <div class="brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 45px; height: 45px;">
+            <path d="M2 12H5L8 20L12 4L15 15L17 12H22" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
 
-<form th:action="@{/signup}" th:object="${user}" method="post">
-    <div>
-        <label>Nom d'utilisateur :</label>
-        <input type="text" th:field="*{username}" required />
-    </div>
-    <div>
-        <label>Mot de passe :</label>
-        <input type="password" th:field="*{password}" required />
-    </div>
-    <div>
-        <label>Rôle :</label>
-        <select th:field="*{role}">
-            <option value="DOCTOR">Médecin</option>
-            <option value="ADMIN">Administrateur</option>
-        </select>
-    </div>
-    <button type="submit">S'enregistrer</button>
-</form>
+    <h2>Créer un compte</h2>
+    <p class="subtitle">Rejoignez le réseau médical</p>
 
-<p>Déjà un compte ? <a href="/login">Connectez-vous ici</a></p>
+    <form th:action="@{/signup}" th:object="${user}" method="post">
+
+        <!-- Champ Utilisateur avec icône -->
+        <div class="input-group">
+            <label>NOM D'UTILISATEUR</label>
+            <i class="fa-solid fa-user"></i>
+            <input type="text" th:field="*{username}" class="form-control" placeholder="Choisissez un nom" required />
+        </div>
+
+        <!-- Champ Mot de passe avec icône -->
+        <div class="input-group">
+            <label>MOT DE PASSE</label>
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" th:field="*{password}" class="form-control" placeholder="••••••••" required />
+        </div>
+
+        <!-- Champ Rôle (on garde le style form-control) -->
+        <div class="input-group">
+            <label>VOTRE RÔLE</label>
+            <select th:field="*{role}" class="form-control" style="padding-left: 15px;">
+                <option value="DOCTOR">Médecin</option>
+                <option value="ADMIN">Administrateur</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn-primary">S'ENREGISTRER</button>
+    </form>
+
+    <div class="footer-link">
+        Déjà inscrit ? <a href="/login">Se connecter</a>
+    </div>
+</div>
 </body>
 </html>

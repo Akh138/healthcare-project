@@ -1,33 +1,44 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Connexion - Healthcare</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <!-- Ajout des icônes FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<h2>Connexion Médecin</h2>
-
-<!-- Message de succès après inscription -->
-<div th:if="${param.success}" style="color: green;">
-    Votre compte a été créé avec succès ! Connectez-vous.
-</div>
-
-<!-- Message d'erreur si mauvais mot de passe -->
-<div th:if="${param.error}" style="color: red;">
-    Nom d'utilisateur ou mot de passe incorrect.
-</div>
-
-<form th:action="@{/login}" method="post">
-    <div>
-        <label>Nom d'utilisateur :</label>
-        <input type="text" name="username" required />
+<div class="container-card">
+    <!-- Petit logo médical -->
+    <div class="brand-icon">
+        <!-- Icône Pouls Médical Moderne -->
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 45px; height: 45px;">
+            <path d="M2 12H5L8 20L12 4L15 15L17 12H22" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
     </div>
-    <div>
-        <label>Mot de passe :</label>
-        <input type="password" name="password" required />
-    </div>
-    <button type="submit">Se connecter</button>
-</form>
 
-<p>Pas encore de compte ? <a href="/signup">Inscrivez-vous ici</a></p>
+    <h2>Bienvenue</h2>
+    <p class="subtitle">Espace sécurisé pour les professionnels</p>
+
+    <form th:action="@{/login}" method="post">
+        <div class="input-group">
+            <label>UTILISATEUR</label>
+            <i class="fa-solid fa-user"></i>
+            <input type="text" name="username" class="form-control" placeholder="Votre nom" required />
+        </div>
+
+        <div class="input-group">
+            <label>MOT DE PASSE</label>
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" name="password" class="form-control" placeholder="••••••••" required />
+        </div>
+
+        <button type="submit" class="btn-primary">SE CONNECTER</button>
+    </form>
+
+    <div class="footer-link">
+        Nouveau sur la plateforme ? <a href="/signup">Créer un compte</a>
+    </div>
+</div>
 </body>
 </html>

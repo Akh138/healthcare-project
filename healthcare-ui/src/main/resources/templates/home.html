@@ -1,8 +1,42 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Accueil - Healthcare</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <!-- Icônes FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
 <body>
-<h1>Tableau de bord Healthcare</h1>
-<p>Bienvenue, Docteur ! Vous êtes connecté.</p>
-<a href="/logout">Se déconnecter</a>
+<div class="container-card" style="max-width: 500px;">
+    <!-- Logo avec pulsation -->
+    <div class="brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 35px; height: 35px;">
+            <path d="M2 12H5L8 20L12 4L15 15L17 12H22" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
+
+    <h2>Tableau de bord</h2>
+    <p class="subtitle">Session sécurisée : Docteur Connecté</p>
+
+    <!-- Menu d'actions principales -->
+    <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px;">
+
+        <!-- Bouton pour la liste des patients -->
+        <a href="/patients" class="btn-primary" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 12px;">
+            <i class="fa-solid fa-hospital-user"></i> Gérer les Patients
+        </a>
+
+        <!-- Un bouton gris pour une future option (Consultations) -->
+        <button class="btn-primary" style="background-color: #f1f5f9; color: #94a3b8; cursor: not-allowed; box-shadow: none;">
+            <i class="fa-solid fa-notes-medical"></i> Consultations (Bientôt)
+        </button>
+
+    </div>
+
+    <div class="footer-link">
+        <a href="/logout" style="color: #ef4444;"><i class="fa-solid fa-power-off"></i> Se déconnecter</a>
+    </div>
+</div>
 </body>
 </html>
