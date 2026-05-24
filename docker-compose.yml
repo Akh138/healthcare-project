@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # --- BASE DE DONNÉES SQL (Utilisateurs et Patients) ---
   mysql-db:
     image: mysql:8.0
     container_name: healthcare-mysql
@@ -13,7 +14,25 @@ services:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 10s
       retries: 5
+    volumes:
+      - mysql_data:/var/lib/mysql
 
+  # ---  BASE DE DONNÉES NOSQL (Notes et Messages) ---
+  mongodb:
+    image: mongo:latest
+    container_name: healthcare-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      # On teste si MongoDB répond bien sur son port interne
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # --- ANNUAIRE DES SERVICES ---
   consul:
     image: hashicorp/consul:1.15
     container_name: healthcare-consul
@@ -21,6 +40,7 @@ services:
       - "8500:8500"
     command: "agent -dev -client=0.0.0.0"
 
+  # --- SERVEUR DE CONFIGURATION ---
   config-server:
     build: ./config-server
     container_name: config-server
@@ -28,13 +48,13 @@ services:
       - "8888:8888"
     depends_on:
       - consul
-    # ON AJOUTE CECI : Docker va tester si le port 8888 répond
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 10
 
+  # --- MICROSERVICE PATIENTS ---
   patient-service:
     build: ./patient-service
     container_name: patient-service
@@ -44,8 +64,9 @@ services:
       mysql-db:
         condition: service_healthy
       config-server:
-        condition: service_healthy # Attendre que le config-server soit HEALTHY
+        condition: service_healthy
 
+  # --- MICROSERVICE UTILISATEURS (MÉDECINS) ---
   user-service:
     build: ./user-service
     container_name: user-service
@@ -55,7 +76,8 @@ services:
       mysql-db:
         condition: service_healthy
       config-server:
-        condition: service_healthy # Attendre que le config-server soit HEALTHY
+        condition: service_healthy
 
 volumes:
   mysql_data:
+  mongodb_data: # On déclare le stockage pour MongoDB

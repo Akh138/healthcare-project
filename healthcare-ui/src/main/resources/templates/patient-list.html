@@ -52,15 +52,18 @@
             <td th:text="${p.phone != null ? p.phone : '-'}"></td>
             <td style="text-align: center; display: flex; gap: 15px; justify-content: center;">
 
+                <!-- BOUTON DOSSIER MÉDICAL (Pour les notes MongoDB) -->
+                <a th:href="@{'/patients/notes/' + ${p.id}}">
+                    <i class="fa-solid fa-file-medical" style="color: #34495e; cursor: pointer;" title="Dossier Médical"></i>
+                </a>
+
                 <!-- BOUTON MODIFIER -->
-                <a th:href="@{'/patients/edit/' + ${p.id}}" style="text-decoration: none;">
+                <a th:href="@{'/patients/edit/' + ${p.id}}">
                     <i class="fa-solid fa-pen-to-square" style="color: #f39c12; cursor: pointer;" title="Modifier"></i>
                 </a>
 
                 <!-- BOUTON SUPPRIMER -->
-                <a th:href="@{'/patients/delete/' + ${p.id}}"
-                   onclick="return confirm('Supprimer définitivement ce patient ?')"
-                   style="text-decoration: none;">
+                <a th:href="@{'/patients/delete/' + ${p.id}}" onclick="return confirm('Supprimer définitivement ce patient ?')">
                     <i class="fa-solid fa-trash" style="color: #e74c3c; cursor: pointer;" title="Supprimer"></i>
                 </a>
 

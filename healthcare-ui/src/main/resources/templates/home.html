@@ -4,41 +4,39 @@
     <meta charset="UTF-8">
     <title>Accueil - Healthcare</title>
     <link rel="stylesheet" th:href="@{/css/common.css}">
-    <!-- Icônes FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 <div class="container-card" style="max-width: 500px;">
-    <!-- Logo avec pulsation -->
+
     <div class="brand-icon">
+        <!-- Notre logo qui pulse -->
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 35px; height: 35px;">
             <path d="M2 12H5L8 20L12 4L15 15L17 12H22" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
     </div>
 
-    <!-- On affiche le nom de l'utilisateur connecté dynamiquement -->
+    <!-- Affiche le pseudo de la personne connectée -->
     <h2>Bienvenue, Dr. <span sec:authentication="name">Nom</span></h2>
     <p class="subtitle">Session sécurisée - Espace <span th:text="${#authentication.authorities[0].authority == 'ROLE_ADMIN' ? 'Administrateur' : 'Médical'}">Rôle</span></p>
 
-    <!-- Menu d'actions principales -->
     <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px;">
 
-        <!-- SECTION VISIBLE UNIQUEMENT PAR LES DOCTEURS -->
+        <!-- BOUTON PATIENTS : visible seulement pour les DOCTEURS -->
         <a sec:authorize="hasRole('DOCTOR')" href="/patients" class="btn-primary" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 12px;">
             <i class="fa-solid fa-hospital-user"></i> Gérer mes Patients
         </a>
 
-        <!-- SECTION VISIBLE UNIQUEMENT PAR L'ADMIN -->
+        <!-- BOUTON PLANNING : pour les futures consultations -->
+        <a sec:authorize="hasRole('DOCTOR')" href="/consultations" class="btn-primary" style="background-color: #34495e; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 12px;">
+            <i class="fa-solid fa-calendar-check"></i> Mon Planning
+        </a>
+
+        <!-- SECTION ADMINISTRATION : visible seulement pour l'ADMIN -->
         <div sec:authorize="hasRole('ADMIN')" style="display: flex; flex-direction: column; gap: 15px;">
             <p style="font-weight: 700; font-size: 0.75rem; color: #64748b; text-transform: uppercase; margin: 0; text-align: center;">Administration</p>
-
-            <a href="/admin/users" class="btn-primary" style="background-color: #2c3e50; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 12px;">
-                <i class="fa-solid fa-user-shield"></i> Liste des Médecins
-            </a>
-
-            <a href="/admin/patients-all" class="btn-primary" style="background-color: #2c3e50; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 12px;">
-                <i class="fa-solid fa-database"></i> Répertoire Global
-            </a>
+            <a href="/admin/users" class="btn-primary" style="background-color: #2c3e50; text-decoration: none; text-align: center;"><i class="fa-solid fa-user-shield"></i> Liste des Médecins</a>
+            <a href="/admin/patients-all" class="btn-primary" style="background-color: #2c3e50; text-decoration: none; text-align: center;"><i class="fa-solid fa-database"></i> Répertoire Global</a>
         </div>
 
     </div>
