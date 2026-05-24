@@ -9,35 +9,29 @@
 <body style="display: flex; flex-direction: column; align-items: center; padding-top: 50px;">
 
 <div class="container-large">
-    <!-- 1. EN-TÊTE -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <div>
             <h2 style="text-align: left; margin: 0;">Répertoire des Patients</h2>
             <p style="color: var(--text-light); margin: 5px 0 0 0; font-size: 0.9rem;">Consultez et gérez les dossiers patients</p>
         </div>
-        <!-- On ne montre le bouton "Nouveau" que si le service fonctionne -->
         <a th:if="${patients != null}" href="/patients/add" class="btn-primary" style="width: auto; padding: 12px 24px;">
             <i class="fa-solid fa-user-plus"></i> Nouveau Patient
         </a>
     </div>
 
-    <!-- 2. CAS DE PANNE : Le service est mort (patients est null) -->
-    <div th:if="${patients == null}"
-         style="background-color: #fee2e2; color: #b91c1c; padding: 30px; border-radius: 15px; text-align: center; border: 1px solid #fecaca; margin: 20px 0;">
+    <!-- CAS DE PANNE -->
+    <div th:if="${patients == null}" style="background-color: #fee2e2; color: #b91c1c; padding: 30px; border-radius: 15px; text-align: center; border: 1px solid #fecaca; margin: 20px 0;">
         <i class="fa-solid fa-triangle-exclamation" style="font-size: 2.5rem; margin-bottom: 10px;"></i>
-        <p style="margin: 0;"><strong>Service en maintenance</strong></p>
-        <p style="font-size: 0.9rem; opacity: 0.8;">Le serveur de données est injoignable. Veuillez réessayer dans quelques instants.</p>
+        <p><strong>Service en maintenance</strong>. Injoignable pour le moment.</p>
     </div>
 
-    <!-- 3. CAS VIDE : Le service marche mais zéro patient (patients est une liste vide) -->
-    <div th:if="${patients != null && patients.isEmpty()}"
-         style="background-color: #f8fafc; color: #64748b; padding: 50px; border-radius: 15px; text-align: center; border: 2px dashed #e2e8f0; margin: 20px 0;">
+    <!-- CAS VIDE -->
+    <div th:if="${patients != null && patients.isEmpty()}" style="background-color: #f8fafc; color: #64748b; padding: 50px; border-radius: 15px; text-align: center; border: 2px dashed #e2e8f0; margin: 20px 0;">
         <i class="fa-solid fa-folder-open" style="font-size: 2.5rem; margin-bottom: 15px; opacity: 0.5;"></i>
-        <p style="margin: 0;">Aucun patient n'est enregistré dans la base de données.</p>
-        <p style="font-size: 0.85rem;">Utilisez le bouton "Nouveau Patient" pour commencer.</p>
+        <p>Aucun patient enregistré.</p>
     </div>
 
-    <!-- 4. CAS NORMAL : On affiche le tableau (seulement s'il y a des données) -->
+    <!-- CAS NORMAL (TABLEAU) -->
     <table th:if="${patients != null && !patients.isEmpty()}">
         <thead>
         <tr>
@@ -57,9 +51,19 @@
             <td th:text="${p.email != null ? p.email : '-'}"></td>
             <td th:text="${p.phone != null ? p.phone : '-'}"></td>
             <td style="text-align: center; display: flex; gap: 15px; justify-content: center;">
-                <!-- On prépare les futurs liens de suppression/modification -->
-                <i class="fa-solid fa-pen-to-square" style="color: #f39c12; cursor: pointer;"></i>
-                <i class="fa-solid fa-trash" style="color: #e74c3c; cursor: pointer;"></i>
+
+                <!-- BOUTON MODIFIER -->
+                <a th:href="@{'/patients/edit/' + ${p.id}}" style="text-decoration: none;">
+                    <i class="fa-solid fa-pen-to-square" style="color: #f39c12; cursor: pointer;" title="Modifier"></i>
+                </a>
+
+                <!-- BOUTON SUPPRIMER -->
+                <a th:href="@{'/patients/delete/' + ${p.id}}"
+                   onclick="return confirm('Supprimer définitivement ce patient ?')"
+                   style="text-decoration: none;">
+                    <i class="fa-solid fa-trash" style="color: #e74c3c; cursor: pointer;" title="Supprimer"></i>
+                </a>
+
             </td>
         </tr>
         </tbody>
@@ -71,6 +75,5 @@
         </a>
     </div>
 </div>
-
 </body>
 </html>
