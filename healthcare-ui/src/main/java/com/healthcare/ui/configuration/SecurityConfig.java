@@ -24,13 +24,16 @@ public class SecurityConfig {
                         // 1. Pages accessibles par TOUT LE MONDE (même non connectés)
                         .requestMatchers("/signup", "/login", "/css/**", "/js/**").permitAll()
 
-                        // 2. Pages réservées UNIQUEMENT à l'ADMIN (gestion des médecins)
+                        // 2. Seul le patient peut aller dans son espace
+                        .requestMatchers("/my-dossier/**").hasRole("PATIENT")
+
+                        // 3. Pages réservées UNIQUEMENT à l'ADMIN (gestion des médecins)
                         .requestMatchers("/admin/**").hasRole("ADMIN")
 
-                        // 3. Pages accessibles aux Médecins et à l'Admin (gestion des patients)
+                        // 4. Pages accessibles aux Médecins et à l'Admin (gestion des patients)
                         .requestMatchers("/patients/**").hasAnyRole("DOCTOR", "ADMIN")
 
-                        // 4. Toute autre page demande d'être connecté.
+                        // 5. Toute autre page demande d'être connecté.
                         .anyRequest().authenticated()
                 )
 

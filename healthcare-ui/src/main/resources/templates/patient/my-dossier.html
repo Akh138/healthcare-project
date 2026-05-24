@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon Dossier - Healthcare</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* On reprend les mêmes styles que pour le médecin pour la cohérence */
+        .grid-container { display: grid; grid-template-columns: 320px 1fr; gap: 25px; width: 95%; max-width: 1200px; height: 85vh; }
+        .card-dossier { background: #fff; padding: 30px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow: hidden; }
+        .message-item { padding: 10px 15px; border-radius: 15px; max-width: 80%; font-size: 0.85rem; margin-bottom: 8px; }
+        .message-doctor { background: var(--primary-blue); color: white; align-self: flex-start; }
+        .message-patient { background: #f1f5f9; align-self: flex-end; }
+        .scrollable { flex-grow: 1; overflow-y: auto; padding-right: 10px; }
+    </style>
+</head>
+<body style="display: flex; justify-content: center; padding-top: 50px; overflow: hidden;">
+
+<div class="grid-container" th:if="${patient != null}">
+
+    <!-- GAUCHE : MES INFOS -->
+    <aside class="card-dossier">
+        <div class="brand-icon"><i class="fa-solid fa-user"></i></div>
+        <h2 th:text="${patient.firstName + ' ' + patient.lastName}"></h2>
+        <p class="subtitle">Espace Patient Personnel</p>
+        <hr style="border: 0; border-top: 1px solid #f1f5f9; margin-bottom: 20px;">
+        <div style="font-size: 0.9rem; line-height: 2;">
+            <p><i class="fa-solid fa-cake-candles"></i> <span th:text="${patient.birthday}"></span></p>
+            <p><i class="fa-solid fa-envelope"></i> <span th:text="${patient.email}"></span></p>
+        </div>
+        <div style="margin-top: auto;"><a href="/logout" style="color: #ef4444; text-decoration: none; font-weight: 700;">Déconnexion</a></div>
+    </aside>
+
+    <!-- DROITE : MON DOSSIER ET CHAT -->
+    <main class="card-dossier">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 100%;">
+
+            <!-- NOTES DU MÉDECIN -->
+            <section style="display: flex; flex-direction: column;">
+                <h3><i class="fa-solid fa-file-medical"></i> Compte-rendus</h3>
+                <div class="scrollable">
+                    <div th:each="n : ${notes}" style="background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--primary-blue);">
+                        <small th:text="${n.date}"></small>
+                        <p th:text="${n.content}" style="margin: 5px 0 0 0; font-size: 0.9rem;"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MESSAGES -->
+            <section style="display: flex; flex-direction: column;">
+                <h3><i class="fa-solid fa-comments"></i> Discussion</h3>
+                <div class="scrollable" style="display: flex; flex-direction: column;">
+                    <div th:each="m : ${messages}" th:classappend="${m.senderName.startsWith('Dr.') ? 'message-doctor' : 'message-patient'}" class="message-item">
+                        <div th:text="${m.content}"></div>
+                    </div>
+                </div>
+                <form th:action="@{/my-dossier/message}" th:object="${newMessage}" method="post" style="margin-top: 15px;">
+                    <div style="display: flex; gap: 5px;">
+                        <input type="text" th:field="*{content}" class="form-control" placeholder="Répondre..." required>
+                        <button type="submit" class="btn-primary" style="width: 50px;"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

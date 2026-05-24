@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <title>Inscription - Healthcare</title>
     <link rel="stylesheet" th:href="@{/css/common.css}">
-    <!-- On ajoute FontAwesome pour les icônes -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 <div class="container-card">
-    <!-- On remet le logo qui pulse -->
     <div class="brand-icon">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 45px; height: 45px;">
             <path d="M2 12H5L8 20L12 4L15 15L17 12H22" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -21,26 +19,37 @@
 
     <form th:action="@{/signup}" th:object="${user}" method="post">
 
-        <!-- Champ Utilisateur avec icône -->
+        <!-- 1. Username -->
         <div class="input-group">
             <label>NOM D'UTILISATEUR</label>
             <i class="fa-solid fa-user"></i>
             <input type="text" th:field="*{username}" class="form-control" placeholder="Choisissez un nom" required />
         </div>
 
-        <!-- Champ Mot de passe avec icône -->
+        <!-- 2. Password -->
         <div class="input-group">
             <label>MOT DE PASSE</label>
             <i class="fa-solid fa-lock"></i>
             <input type="password" th:field="*{password}" class="form-control" placeholder="••••••••" required />
         </div>
 
-        <!-- Champ Rôle (on garde le style form-control) -->
+        <!-- 3. Rôle (C'est lui qui déclenche l'affichage du médecin) -->
         <div class="input-group">
             <label>VOTRE RÔLE</label>
-            <select th:field="*{role}" class="form-control" style="padding-left: 15px;">
+            <select th:field="*{role}" id="roleSelector" class="form-control" style="padding-left: 15px;" onchange="verifierRole()">
                 <option value="DOCTOR">Médecin</option>
+                <option value="PATIENT">Patient</option>
                 <option value="ADMIN">Administrateur</option>
+            </select>
+        </div>
+
+        <!-- 4. Liste des médecins (Cachée par défaut) -->
+        <div id="doctorBlock" style="display: none;" class="input-group">
+            <label>CHOISISSEZ VOTRE MÉDECIN</label>
+            <i class="fa-solid fa-user-md"></i>
+            <select name="selectedDoctor" class="form-control" style="padding-left: 45px;">
+                <option value="">-- Sélectionner un médecin --</option>
+                <option th:each="doc : ${doctors}" th:value="${doc.username}" th:text="'Dr. ' + ${doc.username}"></option>
             </select>
         </div>
 
@@ -51,5 +60,25 @@
         Déjà inscrit ? <a href="/login">Se connecter</a>
     </div>
 </div>
+
+<!-- EXPLICATION DU JAVASCRIPT :
+     Cette fonction s'exécute à chaque fois que la valeur du menu "Rôle" change.
+     Elle récupère l'élément du rôle et l'élément de la liste des médecins.
+     Si le rôle est 'PATIENT', elle affiche le bloc (display: block).
+     Sinon, elle le cache (display: none).
+-->
+<script>
+    function verifierRole() {
+        var roleChoisi = document.getElementById("roleSelector").value;
+        var blocMedecin = document.getElementById("doctorBlock");
+
+        if (roleChoisi === "PATIENT") {
+            blocMedecin.style.display = "block";
+        } else {
+            blocMedecin.style.display = "none";
+        }
+    }
+</script>
+
 </body>
 </html>
