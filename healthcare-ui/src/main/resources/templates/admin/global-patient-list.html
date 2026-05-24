@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue Globale Patients - Admin</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="display: flex; flex-direction: column; align-items: center; padding-top: 50px;">
+
+<div class="container-large">
+    <div style="margin-bottom: 20px;">
+        <h2 style="text-align: left; margin: 0;">Répertoire Global des Patients</h2>
+        <p style="color: var(--text-light); margin: 5px 0 0 0; font-size: 0.9rem;">Vue administrateur de tous les patients du système</p>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Patient</th>
+            <th>Genre</th>
+            <th>Naissance</th>
+            <th><i class="fa-solid fa-user-md"></i> Médecin Responsable</th>
+            <th style="text-align: center;">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${patients}">
+            <td th:text="${p.lastName.toUpperCase() + ' ' + p.firstName}" style="font-weight: 600;"></td>
+            <td th:text="${p.gender}"></td>
+            <td th:text="${p.birthday}"></td>
+            <td>
+                <span class="badge" style="background-color: #34495e; color: white;" th:text="${p.doctorUsername}"></span>
+            </td>
+            <td style="text-align: center;">
+                <i class="fa-solid fa-eye" style="color: var(--primary-blue);"></i>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 30px; border-top: 1px solid #f1f5f9; padding-top: 20px;">
+        <a href="/home" style="text-decoration: none; color: var(--text-light); font-weight: 600; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+        </a>
+    </div>
+</div>
+</body>
+</html>

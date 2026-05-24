@@ -18,19 +18,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // On désactive le CSRF pour que nos formulaires POST fonctionnent facilement
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        // On autorise l'accès libre aux pages de base
+                        // 1. Pages accessibles par TOUT LE MONDE (même non connectés)
                         .requestMatchers("/signup", "/login", "/css/**", "/js/**").permitAll()
-                        // Tout le reste demande d'être connecté
+
+                        // 2. Pages réservées UNIQUEMENT à l'ADMIN (gestion des médecins)
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+
+                        // 3. Pages accessibles aux Médecins et à l'Admin (gestion des patients)
+                        .requestMatchers("/patients/**").hasAnyRole("DOCTOR", "ADMIN")
+
+                        // 4. Toute autre page demande d'être connecté.
                         .anyRequest().authenticated()
                 )
 
                 .formLogin(form -> form
-                        .loginPage("/login")             // Notre page de login
-                        .defaultSuccessUrl("/home", true) // Redirection vers home après connexion
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/home", true) // Redirige vers le Dashboard après login
                         .permitAll()
                 )
 
@@ -51,7 +57,6 @@ public class SecurityConfig {
         return authConfig.getAuthenticationManager();
     }
 
-    // ON UTILISE BCRYPT : Le standard pro pour hacher les mots de passe
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

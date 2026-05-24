@@ -17,9 +17,17 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
+    // Récupérer tous les patients (utile pour l'Admin)
     @GetMapping
     public List<Patient> getAllPatients() {
         return patientService.getAllPatients();
+    }
+
+    // NOUVEAU : Récupérer les patients d'un médecin spécifique
+    // Cette URL sera appelée par l'interface UI
+    @GetMapping("/doctor/{username}")
+    public List<Patient> getPatientsByDoctor(@PathVariable String username) {
+        return patientService.getPatientsByDoctor(username);
     }
 
     @GetMapping("/{id}")
