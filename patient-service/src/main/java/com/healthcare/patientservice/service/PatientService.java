@@ -46,6 +46,7 @@ public class PatientService {
         patient.setAddress(patientDetails.getAddress());
         patient.setPhone(patientDetails.getPhone());
         patient.setEmail(patientDetails.getEmail());
+        patient.setProfilePicture(patientDetails.getProfilePicture());
 
         // On n'oublie pas de garder le lien avec le médecin
         patient.setDoctorUsername(patientDetails.getDoctorUsername());
@@ -56,5 +57,9 @@ public class PatientService {
     // Supprimer un patient
     public void deletePatient(Long id) {
         patientRepository.deleteById(id);
+    }
+
+    public Optional<Patient> getPatientByAccount(String username) {
+        return patientRepository.findByPatientUsername(username);
     }
 }

@@ -40,4 +40,9 @@ public class PatientFallback implements PatientProxy {
     public void deletePatient(Long id) {
         // On ne fait rien car le service est injoignable
     }
+
+    @Override
+    public PatientDTO getPatientByAccount(String username) {
+        return null;
+    }
 }

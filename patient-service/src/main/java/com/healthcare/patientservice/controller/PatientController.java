@@ -57,4 +57,12 @@ public class PatientController {
         patientService.deletePatient(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/account/{username}")
+    public ResponseEntity<Patient> getPatientByAccount(@PathVariable String username) {
+        return patientService.getPatientByAccount(username)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 }

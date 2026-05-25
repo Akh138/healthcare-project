@@ -44,4 +44,12 @@ public class Patient {
 
     @Column(name = "doctor_username")
     private String doctorUsername;
+
+    //  Nom du compte utilisateur lié à ce patient
+    @Column(name = "patient_username")
+    private String patientUsername;
+
+    @Lob // Signifie Large Object
+    @Column(name = "profile_picture", columnDefinition = "LONGTEXT")
+    private String profilePicture;
 }

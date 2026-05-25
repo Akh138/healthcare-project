@@ -27,4 +27,7 @@ public interface PatientProxy {
 
     @DeleteMapping("/api/patients/{id}")
     void deletePatient(@PathVariable("id") Long id);
+
+    @GetMapping("/api/patients/account/{username}")
+    PatientDTO getPatientByAccount(@PathVariable("username") String username);
 }
