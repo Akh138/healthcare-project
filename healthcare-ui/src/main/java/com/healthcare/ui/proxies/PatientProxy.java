@@ -1,6 +1,7 @@
 package com.healthcare.ui.proxies;
 
-import com.healthcare.ui.model.PatientDTO;
+import com.healthcare.ui.dto.AppointmentDTO;
+import com.healthcare.ui.dto.PatientDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,4 +31,13 @@ public interface PatientProxy {
 
     @GetMapping("/api/patients/account/{username}")
     PatientDTO getPatientByAccount(@PathVariable("username") String username);
+
+    @GetMapping("/api/appointments/doctor/{username}")
+    List<AppointmentDTO> getAppointmentsByDoctor(@PathVariable("username") String username);
+
+    @PostMapping("/api/appointments")
+    AppointmentDTO createAppointment(@RequestBody AppointmentDTO appointment);
+
+    @DeleteMapping("/api/appointments/{id}")
+    void deleteAppointment(@PathVariable("id") Long id);
 }

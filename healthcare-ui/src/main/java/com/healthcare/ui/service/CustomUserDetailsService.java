@@ -1,6 +1,6 @@
 package com.healthcare.ui.service;
 
-import com.healthcare.ui.model.UserDTO;
+import com.healthcare.ui.dto.UserDTO;
 import com.healthcare.ui.proxies.UserProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;

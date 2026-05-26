@@ -1,6 +1,6 @@
 package com.healthcare.ui.proxies;
 
-import com.healthcare.ui.model.UserDTO;
+import com.healthcare.ui.dto.UserDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 

@@ -11,7 +11,8 @@
 <div class="container-large">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <div>
-            <h2 style="text-align: left; margin: 0;">Gestion des Utilisateurs</h2>
+
+            <h2 style="text-align: left; margin: 0;">Gestion des Médecins</h2>
             <p style="color: var(--text-light); margin: 5px 0 0 0; font-size: 0.9rem;">Liste des médecins inscrits sur la plateforme</p>
         </div>
     </div>
@@ -26,6 +27,7 @@
         </tr>
         </thead>
         <tbody>
+        <!-- On boucle sur la liste "users" qui ne contient plus que des médecins maintenant -->
         <tr th:each="u : ${users}">
             <td th:text="${u.id}"></td>
             <td th:text="${u.username}" style="font-weight: 600;"></td>

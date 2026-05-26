@@ -1,8 +1,8 @@
 package com.healthcare.ui.controller;
 
-import com.healthcare.ui.model.MessageDTO;
-import com.healthcare.ui.model.NoteDTO;
-import com.healthcare.ui.model.PatientDTO;
+import com.healthcare.ui.dto.MessageDTO;
+import com.healthcare.ui.dto.NoteDTO;
+import com.healthcare.ui.dto.PatientDTO;
 import com.healthcare.ui.proxies.NoteProxy;
 import com.healthcare.ui.proxies.PatientProxy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,35 +17,40 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.util.List;
 
 /**
- * CONTRÔLEUR PRINCIPAL DE L'INTERFACE
+ * C'EST LE CONTRÔLEUR QUI GÈRE TOUTE L'INTERFACE DES PATIENTS (LISTE, AJOUT, NOTES...)
  */
 @Controller
 public class PatientController {
 
     @Autowired
-    private PatientProxy patientProxy; // Microservice Patient (MySQL)
+    private PatientProxy patientProxy; // Pour discuter avec le microservice Patient (les données MySQL)
 
     @Autowired
-    private NoteProxy noteProxy;       // Microservice Note (MongoDB) - Gère Notes ET Messages
+    private NoteProxy noteProxy;       // Pour discuter avec le microservice Note (les données NoSQL de MongoDB)
 
     // =========================================================================
-    // SECTION 1 : GESTION DES PATIENTS (MySQL)
+    // SECTION 1 : ICI ON GÈRE LES INFOS DE BASE DU PATIENT (DANS MySQL)
     // =========================================================================
 
+    // On affiche la liste des patients du médecin qui est connecté
     @GetMapping("/patients")
     public String listPatients(Model model, Authentication authentication) {
         String currentDoctor = authentication.getName();
         List<PatientDTO> patients = patientProxy.getPatientsByDoctor(currentDoctor);
         model.addAttribute("patients", patients);
-        return "patient-list";
+
+        // On retourne la vue dans le dossier patient
+        return "patient/patient-list";
     }
 
+    // On affiche le formulaire pour ajouter un nouveau patient
     @GetMapping("/patients/add")
     public String showAddForm(Model model) {
         model.addAttribute("patient", new PatientDTO());
-        return "patient-add";
+        return "patient/patient-add";
     }
 
+    // On enregistre le nouveau patient et on le lie au médecin actuel
     @PostMapping("/patients/add")
     public String savePatient(@ModelAttribute("patient") PatientDTO patient, Authentication authentication) {
         patient.setDoctorUsername(authentication.getName());
@@ -53,13 +58,15 @@ public class PatientController {
         return "redirect:/patients";
     }
 
+    // On va chercher les infos d'un patient pour les modifier
     @GetMapping("/patients/edit/{id}")
     public String showUpdateForm(@PathVariable("id") Long id, Model model) {
         PatientDTO patient = patientProxy.getPatientById(id);
         model.addAttribute("patient", patient);
-        return "patient-update";
+        return "patient/patient-update";
     }
 
+    // On enregistre les modifications faites sur le patient
     @PostMapping("/patients/update/{id}")
     public String updatePatient(@PathVariable("id") Long id, @ModelAttribute("patient") PatientDTO patient, Authentication authentication) {
         patient.setId(id);
@@ -68,6 +75,7 @@ public class PatientController {
         return "redirect:/patients";
     }
 
+    // Pour supprimer un patient de la liste
     @GetMapping("/patients/delete/{id}")
     public String deletePatient(@PathVariable("id") Long id) {
         patientProxy.deletePatient(id);
@@ -75,30 +83,34 @@ public class PatientController {
     }
 
     // =========================================================================
-    // SECTION 2 : DOSSIER MÉDICAL & MESSAGERIE (MongoDB NoSQL)
+    // SECTION 2 : ICI ON GÈRE LE DOSSIER MÉDICAL ET LES NOTES (DANS MongoDB)
     // =========================================================================
 
+    // C'est ici qu'on affiche tout le dossier d'un patient (Infos + Notes + Messages)
     @GetMapping("/patients/notes/{id}")
     public String showPatientDossier(@PathVariable("id") Long id, Model model) {
-        // 1. Identité (MySQL)
+        // 1. On récupère les infos d'identité (via MySQL)
         PatientDTO patient = patientProxy.getPatientById(id);
 
-        // 2. Notes (MongoDB)
+        // 2. On récupère les notes médicales (via MongoDB)
         List<NoteDTO> notes = noteProxy.getNotesByPatient(id);
 
-        // 3. On utilise noteProxy pour les messages aussi
+        // 3. On récupère aussi les messages de la messagerie (via MongoDB)
         List<MessageDTO> messages = noteProxy.getMessagesByPatient(id);
 
         model.addAttribute("patient", patient);
         model.addAttribute("notes", notes);
         model.addAttribute("messages", messages);
 
+        // On prépare des objets vides pour les formulaires d'ajout de note/message
         model.addAttribute("newNote", new NoteDTO());
         model.addAttribute("newMessage", new MessageDTO());
 
-        return "patient-dossier";
+        // On pointe vers le fichier dans le dossier patient
+        return "patient/patient-dossier";
     }
 
+    // Pour ajouter une nouvelle note médicale dans le dossier MongoDB
     @PostMapping("/patients/notes/add/{id}")
     public String addNoteToPatient(@PathVariable("id") Long id, @ModelAttribute("newNote") NoteDTO note, Authentication authentication) {
         note.setPatientId(id);
@@ -107,21 +119,22 @@ public class PatientController {
         return "redirect:/patients/notes/" + id;
     }
 
+    // Pour envoyer un message au patient via la messagerie NoSQL
     @PostMapping("/patients/messages/add/{id}")
     public String sendMessageToPatient(@PathVariable("id") Long id, @ModelAttribute("newMessage") MessageDTO message, Authentication authentication) {
         message.setPatientId(id);
         message.setSenderName("Dr. " + authentication.getName());
 
-        // CORRECTION : On utilise noteProxy
+        // On passe par le proxy des notes car elles partagent le même microservice MongoDB
         noteProxy.sendMessage(message);
 
         return "redirect:/patients/notes/" + id;
     }
 
-    // Méthode supprimer note
+    // Méthode pour supprimer une note spécifique dans MongoDB
     @GetMapping("/patients/notes/delete/{noteId}/{patientId}")
     public String deleteNote(@PathVariable("noteId") String noteId, @PathVariable("patientId") Long patientId) {
-        noteProxy.deleteNote(noteId); // Appelle le microservice NoSQL
-        return "redirect:/patients/notes/" + patientId; // Revient sur le dossier
+        noteProxy.deleteNote(noteId); // Supprime le document dans la collection NoSQL
+        return "redirect:/patients/notes/" + patientId; // On recharge la page du dossier
     }
 }

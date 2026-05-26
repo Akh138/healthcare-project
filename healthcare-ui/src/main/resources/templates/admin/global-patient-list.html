@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Vue Globale Patients - Admin</title>
+    <title>Gestion Patients - Admin</title>
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -10,8 +10,9 @@
 
 <div class="container-large">
     <div style="margin-bottom: 20px;">
-        <h2 style="text-align: left; margin: 0;">Répertoire Global des Patients</h2>
-        <p style="color: var(--text-light); margin: 5px 0 0 0; font-size: 0.9rem;">Vue administrateur de tous les patients du système</p>
+        <!-- J'ai mis Gestion des Patients pour que ce soit plus clair pour l'admin -->
+        <h2 style="text-align: left; margin: 0;">Gestion des Patients</h2>
+        <p style="color: var(--text-light); margin: 5px 0 0 0; font-size: 0.9rem;">Répertoire complet de tous les patients enregistrés</p>
     </div>
 
     <table>
@@ -25,6 +26,7 @@
         </tr>
         </thead>
         <tbody>
+        <!-- On affiche la liste filtrée qui ne contient plus de médecins -->
         <tr th:each="p : ${patients}">
             <td th:text="${p.lastName.toUpperCase() + ' ' + p.firstName}" style="font-weight: 600;"></td>
             <td th:text="${p.gender}"></td>
@@ -33,6 +35,7 @@
                 <span class="badge" style="background-color: #34495e; color: white;" th:text="${p.doctorUsername}"></span>
             </td>
             <td style="text-align: center;">
+                <!-- Icone pour voir le dossier (on pourra ajouter le lien plus tard) -->
                 <i class="fa-solid fa-eye" style="color: var(--primary-blue);"></i>
             </td>
         </tr>

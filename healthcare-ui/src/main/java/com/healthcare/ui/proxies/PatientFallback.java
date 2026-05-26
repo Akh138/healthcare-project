@@ -1,7 +1,10 @@
 package com.healthcare.ui.proxies;
 
-import com.healthcare.ui.model.PatientDTO;
+import com.healthcare.ui.dto.AppointmentDTO;
+import com.healthcare.ui.dto.PatientDTO;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -45,4 +48,17 @@ public class PatientFallback implements PatientProxy {
     public PatientDTO getPatientByAccount(String username) {
         return null;
     }
+
+    @Override
+    public List<AppointmentDTO> getAppointmentsByDoctor(String username) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public AppointmentDTO createAppointment(AppointmentDTO appointment) {
+        return null;
+    }
+
+    @Override
+    public void deleteAppointment(Long id) { }
 }
