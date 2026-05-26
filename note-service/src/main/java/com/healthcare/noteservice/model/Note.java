@@ -8,17 +8,19 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
-@Document(collection = "notes") // C'est ici qu'on définit le nom de la collection NoSQL
+@Document(collection = "notes") // C'est le nom du dossier dans MongoDB
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Note {
 
-    @Id // L'ID sera généré automatiquement par MongoDB sous forme de String (ex: 64b7...)
+    @Id // MongoDB va créer un ID unique automatiquement (ex: 65a12b...)
     private String id;
 
-    private Long patientId;    // Le lien vers  patient dans MySQL
-    private String doctorName; // Le médecin qui écrit la note
-    private String content;    // Le texte de la consultation
-    private LocalDateTime date = LocalDateTime.now(); // Date de la note
+    private Long patientId;    // L'ID du patient qui vient de MySQL
+    private String doctorName; // Le nom du médecin qui écrit
+    private String content;    // Ce qui a été dit pendant le rendez-vous
+
+    // Je mets la date par défaut à "maintenant"
+    private LocalDateTime date = LocalDateTime.now();
 }
