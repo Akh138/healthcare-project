@@ -16,93 +16,110 @@ import java.util.List;
 @Controller
 public class RegistrationController {
 
-    // Ici on fait appel à nos proxies pour discuter avec les autres microservices
     @Autowired
     private UserProxy userProxy;
 
     @Autowired
-    private PatientProxy patientProxy; // Utile pour créer la fiche médicale automatiquement à l'inscription
+    private PatientProxy patientProxy;
 
     @Autowired
-    private PasswordEncoder passwordEncoder; // Pour crypter le mot de passe avant de l'enregistrer
+    private PasswordEncoder passwordEncoder;
 
-    // C'est ici qu'on affiche la page pour s'inscrire
+    // =========================================================================
+    // INSCRIPTION PUBLIQUE (Sert uniquement aux PATIENTS)
+    // =========================================================================
+
     @GetMapping("/signup")
     public String showSignUpForm(Model model) {
         model.addAttribute("user", new UserDTO());
 
-        // On va chercher tous les utilisateurs pour filtrer seulement ceux qui ont le rôle DOCTOR
-        // Ça nous permet de remplir la liste déroulante dans le formulaire d'inscription
-        List<UserDTO> allUsers = userProxy.getAllUsers();
-        List<UserDTO> doctors = allUsers.stream()
+        // On récupère les médecins pour que le patient puisse choisir le sien
+        List<UserDTO> doctors = userProxy.getAllUsers().stream()
                 .filter(u -> "DOCTOR".equals(u.getRole()))
                 .toList();
 
         model.addAttribute("doctors", doctors);
-
-        // ATTENTION : On retourne maintenant "auth/signup" car le fichier est dans le dossier auth
         return "auth/signup";
     }
 
-    // C'est ici qu'on traite les données une fois que l'utilisateur a cliqué sur "S'inscrire"
     @PostMapping("/signup")
     public String registerUser(@ModelAttribute("user") UserDTO user,
                                @RequestParam(value = "selectedDoctor", required = false) String selectedDoctor) {
         try {
-            // ÉTAPE 1 : On s'occupe de la création du compte utilisateur
-            // On encode le mot de passe pour qu'il ne soit pas en clair dans la base de données
+            // SÉCURITÉ : On force le rôle à PATIENT pour les inscriptions publiques
+            user.setRole("PATIENT");
+
             String encodedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
             userProxy.createUser(user);
-            System.out.println("Compte utilisateur créé : " + user.getUsername());
 
-            // ÉTAPE 2 : On automatise la création de la fiche patient
-            // Si l'utilisateur choisit d'être un "PATIENT" et qu'un médecin est sélectionné, on lui crée son dossier médical par défaut
-            if ("PATIENT".equals(user.getRole()) && selectedDoctor != null && !selectedDoctor.isEmpty()) {
+            // On crée automatiquement le dossier médical lié au médecin choisi
+            if (selectedDoctor != null && !selectedDoctor.isEmpty()) {
                 PatientDTO newFiche = new PatientDTO();
-                newFiche.setFirstName(user.getUsername()); // Le pseudo devient le prénom par défaut
+                newFiche.setFirstName(user.getUsername());
                 newFiche.setLastName("NOUVEAU DOSSIER");
                 newFiche.setBirthday("2000-01-01");
                 newFiche.setGender("?");
                 newFiche.setAddress("À renseigner");
                 newFiche.setPhone("0000000000");
                 newFiche.setEmail(user.getUsername() + "@healthcare.com");
-
-                // On lie ce nouveau dossier au médecin choisi lors de l'inscription
                 newFiche.setDoctorUsername(selectedDoctor);
 
                 patientProxy.createPatient(newFiche);
-                System.out.println("Fiche patient liée au Dr. " + selectedDoctor + " créée avec succès.");
             }
 
         } catch (Exception e) {
-            // Si ça plante (ex: pseudo déjà pris), on l'affiche dans la console
-            System.out.println("ERREUR lors de l'inscription : " + e.getMessage());
+            System.out.println("ERREUR lors de l'inscription patient : " + e.getMessage());
         }
-
-        // Une fois fini, on renvoie vers la page de login avec un petit message de succès
         return "redirect:/login?success";
     }
 
-    // Affiche la page de connexion
+    // =========================================================================
+    // INSCRIPTION ADMIN (Sert à l'Admin pour créer des MÉDECINS ou d'autres ADMINS)
+    // =========================================================================
+
+    // Affiche le formulaire spécial pour l'admin
+    @GetMapping("/admin/signup")
+    public String showAdminSignUpForm(Model model) {
+        model.addAttribute("user", new UserDTO());
+        // On renvoie vers une nouvelle page qu'on va créer
+        return "admin/admin-signup";
+    }
+
+    // Traite la création d'un membre du personnel par l'admin
+    @PostMapping("/admin/signup")
+    public String registerStaffByAdmin(@ModelAttribute("user") UserDTO user) {
+        try {
+            // On crypte le mot de passe du nouveau collègue
+            String encodedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(encodedPassword);
+
+            // On crée le compte (le rôle est celui choisi par l'admin dans le formulaire)
+            userProxy.createUser(user);
+            System.out.println("Nouveau membre du personnel créé : " + user.getUsername() + " (" + user.getRole() + ")");
+
+        } catch (Exception e) {
+            System.out.println("ERREUR lors de la création par l'admin : " + e.getMessage());
+        }
+        // Une fois créé, on ramène l'admin vers la liste des médecins
+        return "redirect:/admin/users?created";
+    }
+
+    // =========================================================================
+    // CONNEXION ET REDIRECTION
+    // =========================================================================
+
     @GetMapping("/login")
     public String login() {
-        // Comme pour signup, on indique le chemin vers le dossier auth
         return "auth/login";
     }
 
-    // Cette partie gère l'arrivée sur l'application après s'être connecté
     @GetMapping("/home")
     public String home(Authentication authentication) {
-        // On récupère le rôle de la personne connectée
         String role = authentication.getAuthorities().toString();
-
-        // Si c'est un patient, on ne veut pas qu'il voie l'accueil général, on le redirige vers son dossier
         if (role.contains("ROLE_PATIENT")) {
             return "redirect:/my-dossier";
         }
-
-        // Sinon (pour les médecins et admins), on affiche la page home qui est à la racine des templates
         return "home";
     }
 }

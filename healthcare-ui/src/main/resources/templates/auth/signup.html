@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Inscription - Healthcare</title>
+    <title>Inscription Patient - Healthcare</title>
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -14,46 +14,39 @@
         </svg>
     </div>
 
-    <h2>Créer un compte</h2>
-    <p class="subtitle">Rejoignez le réseau médical</p>
+    <h2>Créer mon compte Patient</h2>
+    <p class="subtitle">Accédez à votre dossier médical en ligne</p>
 
     <form th:action="@{/signup}" th:object="${user}" method="post">
 
-        <!-- 1. Username -->
+        <!-- On force le rôle PATIENT de façon invisible pour que le contrôleur le reçoive bien -->
+        <input type="hidden" th:field="*{role}" value="PATIENT" />
+
+        <!-- 1. Nom d'utilisateur -->
         <div class="input-group">
             <label>NOM D'UTILISATEUR</label>
             <i class="fa-solid fa-user"></i>
-            <input type="text" th:field="*{username}" class="form-control" placeholder="Choisissez un nom" required />
+            <input type="text" th:field="*{username}" class="form-control" placeholder="Choisissez un pseudo" required />
         </div>
 
-        <!-- 2. Password -->
+        <!-- 2. Mot de passe -->
         <div class="input-group">
             <label>MOT DE PASSE</label>
             <i class="fa-solid fa-lock"></i>
             <input type="password" th:field="*{password}" class="form-control" placeholder="••••••••" required />
         </div>
 
-        <!-- 3. Rôle (C'est lui qui déclenche l'affichage du médecin) -->
+        <!-- 3. Choix du médecin (Obligatoire pour un patient) -->
         <div class="input-group">
-            <label>VOTRE RÔLE</label>
-            <select th:field="*{role}" id="roleSelector" class="form-control" style="padding-left: 15px;" onchange="verifierRole()">
-                <option value="DOCTOR">Médecin</option>
-                <option value="PATIENT">Patient</option>
-                <option value="ADMIN">Administrateur</option>
-            </select>
-        </div>
-
-        <!-- 4. Liste des médecins (Cachée par défaut) -->
-        <div id="doctorBlock" style="display: none;" class="input-group">
-            <label>CHOISISSEZ VOTRE MÉDECIN</label>
+            <label>VOTRE MÉDECIN RÉFÉRENT</label>
             <i class="fa-solid fa-user-md"></i>
-            <select name="selectedDoctor" class="form-control" style="padding-left: 45px;">
-                <option value="">-- Sélectionner un médecin --</option>
+            <select name="selectedDoctor" class="form-control" style="padding-left: 45px;" required>
+                <option value="">-- Qui est votre médecin ? --</option>
                 <option th:each="doc : ${doctors}" th:value="${doc.username}" th:text="'Dr. ' + ${doc.username}"></option>
             </select>
         </div>
 
-        <button type="submit" class="btn-primary">S'ENREGISTRER</button>
+        <button type="submit" class="btn-primary">CRÉER MON ACCÈS</button>
     </form>
 
     <div class="footer-link">
@@ -61,24 +54,7 @@
     </div>
 </div>
 
-<!-- EXPLICATION DU JAVASCRIPT :
-     Cette fonction s'exécute à chaque fois que la valeur du menu "Rôle" change.
-     Elle récupère l'élément du rôle et l'élément de la liste des médecins.
-     Si le rôle est 'PATIENT', elle affiche le bloc (display: block).
-     Sinon, elle le cache (display: none).
--->
-<script>
-    function verifierRole() {
-        var roleChoisi = document.getElementById("roleSelector").value;
-        var blocMedecin = document.getElementById("doctorBlock");
 
-        if (roleChoisi === "PATIENT") {
-            blocMedecin.style.display = "block";
-        } else {
-            blocMedecin.style.display = "none";
-        }
-    }
-</script>
 
 </body>
 </html>

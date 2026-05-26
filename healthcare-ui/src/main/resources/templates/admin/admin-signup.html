@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscription Staff - Admin</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="display: flex; flex-direction: column; align-items: center; padding-top: 50px;">
+
+<div class="container-card">
+    <div class="brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 35px; height: 35px;">
+            <path d="M2 12H5L8 20L12 4L15 15L17 12H22" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
+
+    <h2>Inscrire un Medecin ou Admin</h2>
+    <p class="subtitle">Espace réservé à l'administration</p>
+
+    <!-- On envoie vers la route spéciale admin qu'on a créée dans le contrôleur -->
+    <form th:action="@{/admin/signup}" th:object="${user}" method="post">
+
+        <!-- 1. Nom d'utilisateur -->
+        <div class="input-group">
+            <label>NOM D'UTILISATEUR</label>
+            <i class="fa-solid fa-user"></i>
+            <input type="text" th:field="*{username}" class="form-control" placeholder="Pseudo du collègue" required />
+        </div>
+
+        <!-- 2. Mot de passe provisoire -->
+        <div class="input-group">
+            <label>MOT DE PASSE PROVISOIRE</label>
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" th:field="*{password}" class="form-control" placeholder="••••••••" required />
+        </div>
+
+        <!-- 3. Choix du rôle (Seulement Staff) -->
+        <div class="input-group">
+            <label>ATTRIBUER UN RÔLE</label>
+            <i class="fa-solid fa-id-card-clip" style="position: absolute; left: 15px; top: 40px; color: #94a3b8;"></i>
+            <select th:field="*{role}" class="form-control" style="padding-left: 45px;" required>
+                <option value="DOCTOR">Médecin (DOCTOR)</option>
+                <option value="ADMIN">Administrateur (ADMIN)</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn-primary" style="background-color: #16a085;">VALIDER LA CRÉATION</button>
+    </form>
+
+    <div style="margin-top: 20px; text-align: center;">
+        <a href="/home" style="text-decoration: none; color: var(--text-light); font-weight: 600;">
+            <i class="fa-solid fa-arrow-left"></i> Annuler et retourner
+        </a>
+    </div>
+</div>
+
+</body>
+</html>
