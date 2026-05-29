@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>En attente - Healthcare</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="display: flex; flex-direction: column; align-items: center; padding-top: 100px;">
+
+<div class="container-card" style="max-width: 500px; text-align: center;">
+    <div class="brand-icon" style="background-color: #fef3c7; margin-bottom: 20px;">
+        <!-- Une icône d'horloge pour dire que c'est en cours -->
+        <i class="fa-solid fa-clock-rotate-left" style="color: #d97706; font-size: 2rem;"></i>
+    </div>
+
+    <h2>Dossier en attente</h2>
+    <p class="subtitle">Bonjour <span th:text="${#authentication.name}">Pseudo</span> ! Votre compte est créé avec succès.</p>
+
+    <div style="margin-top: 30px; padding: 20px; background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 12px;">
+        <p style="font-size: 0.9rem; color: #92400e; line-height: 1.5;">
+            <i class="fa-solid fa-circle-info"></i> Votre inscription est en attente de validation.
+            Votre médecin doit maintenant initialiser votre dossier médical avant que vous puissiez y accéder.
+        </p>
+    </div>
+
+    <div class="footer-link" style="margin-top: 30px;">
+        <a href="/logout" style="color: #ef4444; font-weight: 600;"><i class="fa-solid fa-power-off"></i> Se déconnecter</a>
+    </div>
+</div>
+
+</body>
+</html>

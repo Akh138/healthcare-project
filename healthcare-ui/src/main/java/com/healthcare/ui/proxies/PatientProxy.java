@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "patient-service", url = "http://localhost:8081", fallback = PatientFallback.class)
+@FeignClient(name = "patient-service", fallback = PatientFallback.class)
 public interface PatientProxy {
 
     @GetMapping("/api/patients")

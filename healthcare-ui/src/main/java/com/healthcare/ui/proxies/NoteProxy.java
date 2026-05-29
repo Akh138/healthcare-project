@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 // On définit un seul client pour le microservice "note-service"
-@FeignClient(name = "note-service", url = "http://localhost:8083")
+@FeignClient(name = "note-service")
 public interface NoteProxy {
 
     // --- PARTIE NOTES MÉDICALES ---

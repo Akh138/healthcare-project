@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # --- BASE DE DONNÉES SQL (Utilisateurs et Patients) ---
+  # --- BASE DE DONNÉES SQL (MySQL) ---
   mysql-db:
     image: mysql:8.0
     container_name: healthcare-mysql
@@ -14,10 +14,11 @@ services:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 10s
       retries: 5
+      start_period: 30s # On laisse 30s pour que MySQL soit prêt
     volumes:
       - mysql_data:/var/lib/mysql
 
-  # ---  BASE DE DONNÉES NOSQL (Notes et Messages) ---
+  # --- BASE DE DONNÉES NOSQL (MongoDB) ---
   mongodb:
     image: mongo:latest
     container_name: healthcare-mongodb
@@ -26,13 +27,13 @@ services:
     volumes:
       - mongodb_data:/data/db
     healthcheck:
-      # On teste si MongoDB répond bien sur son port interne
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 30s
 
-  # --- ANNUAIRE DES SERVICES ---
+  # --- ANNUAIRE DES SERVICES (Consul) ---
   consul:
     image: hashicorp/consul:1.15
     container_name: healthcare-consul
@@ -48,13 +49,18 @@ services:
       - "8888:8888"
     depends_on:
       - consul
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=healthcare-consul
+      # RÉPARATION : On dit à Consul d'utiliser l'IP du conteneur
+      - SPRING_CLOUD_CONSUL_DISCOVERY_PREFER_IP_ADDRESS=true
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
+      interval: 15s
+      timeout: 10s
+      retries: 15
+      start_period: 60s
 
-  # --- MICROSERVICE PATIENTS ---
+  # --- MICROSERVICE PATIENTS (MySQL) ---
   patient-service:
     build: ./patient-service
     container_name: patient-service
@@ -65,8 +71,14 @@ services:
         condition: service_healthy
       config-server:
         condition: service_healthy
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=healthcare-consul
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - SPRING_DATASOURCE_URL=jdbc:mysql://healthcare-mysql:3306/healthcare_db?allowPublicKeyRetrieval=true&useSSL=false
+      # RÉPARATION : On utilise l'IP pour que l'UI puisse appeler ce service
+      - SPRING_CLOUD_CONSUL_DISCOVERY_PREFER_IP_ADDRESS=true
 
-  # --- MICROSERVICE UTILISATEURS (MÉDECINS) ---
+  # --- MICROSERVICE UTILISATEURS (MySQL) ---
   user-service:
     build: ./user-service
     container_name: user-service
@@ -77,7 +89,46 @@ services:
         condition: service_healthy
       config-server:
         condition: service_healthy
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=healthcare-consul
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - SPRING_DATASOURCE_URL=jdbc:mysql://healthcare-mysql:3306/healthcare_db?allowPublicKeyRetrieval=true&useSSL=false
+      # RÉPARATION : On utilise l'IP pour que le Login fonctionne enfin
+      - SPRING_CLOUD_CONSUL_DISCOVERY_PREFER_IP_ADDRESS=true
+
+  # --- MICROSERVICE NOTES ET MESSAGES (MongoDB) ---
+  note-service:
+    build: ./note-service
+    container_name: note-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=healthcare-consul
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - SPRING_DATA_MONGODB_URI=mongodb://healthcare-mongodb:27017/healthcare_notes
+      # RÉPARATION : On utilise l'IP pour les notes NoSQL
+      - SPRING_CLOUD_CONSUL_DISCOVERY_PREFER_IP_ADDRESS=true
+
+  # --- INTERFACE WEB (L'UI) ---
+  healthcare-ui:
+    build: ./healthcare-ui
+    container_name: healthcare-ui
+    ports:
+      - "8080:8080"
+    depends_on:
+      config-server:
+        condition: service_healthy
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=healthcare-consul
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      # RÉPARATION : On force l'IP pour que tout le réseau soit cohérent
+      - SPRING_CLOUD_CONSUL_DISCOVERY_PREFER_IP_ADDRESS=true
 
 volumes:
   mysql_data:
-  mongodb_data: # On déclare le stockage pour MongoDB
+  mongodb_data:
