@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Demandes d'inscription - Healthcare</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="display: flex; flex-direction: column; align-items: center; padding-top: 50px;">
+
+<div class="container-large">
+    <div style="margin-bottom: 20px;">
+        <!-- Titre de la page des demandes -->
+        <h2 style="text-align: left; margin: 0;">Demandes d'inscription</h2>
+        <p style="color: var(--text-light); margin: 5px 0 0 0; font-size: 0.9rem;">Nouveaux patients en attente de création de dossier</p>
+    </div>
+
+    <!-- On affiche un message si aucune demande n'est en cours -->
+    <div th:if="${#lists.isEmpty(requests)}" style="text-align: center; padding: 40px; background: #f8fafc; border-radius: 15px;">
+        <i class="fa-solid fa-check-circle" style="color: #2ecc71; font-size: 3rem; margin-bottom: 15px;"></i>
+        <p style="font-weight: 600; color: #64748b;">Aucune demande en attente pour le moment.</p>
+    </div>
+
+    <!-- Le tableau des nouveaux inscrits (seulement s'il y a des demandes) -->
+    <table th:if="${!#lists.isEmpty(requests)}">
+        <thead>
+        <tr>
+            <th>DATE D'INSCRIPTION</th>
+            <th>PSEUDO PATIENT</th>
+            <th>EMAIL PROVISOIRE</th>
+            <th style="text-align: center;">ACTION</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${requests}">
+            <!-- On affiche la date de naissance par défaut ou la date actuelle si on veut -->
+            <td th:text="${p.birthday}">Date</td>
+            <!-- On affiche le pseudo qu'ils ont choisi au signup -->
+            <td th:text="${p.firstName}" style="font-weight: 600; color: var(--primary-blue);"></td>
+            <td th:text="${p.email}">Email</td>
+            <td style="text-align: center;">
+                <!-- Bouton pour ouvrir le formulaire de création de fiche réelle -->
+                <a th:href="@{'/patients/validate/' + ${p.id}}" class="btn-primary"
+                   style="padding: 8px 15px; font-size: 0.8rem; background-color: #2980b9; text-decoration: none;">
+                    VALIDER & CRÉER FICHE
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 30px; border-top: 1px solid #f1f5f9; padding-top: 20px;">
+        <a href="/home" style="text-decoration: none; color: var(--text-light); font-weight: 600; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+        </a>
+    </div>
+</div>
+</body>
+</html>

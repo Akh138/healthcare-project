@@ -32,18 +32,42 @@ public class PatientController {
     // SECTION 1 : ICI ON GÈRE LES INFOS DE BASE DU PATIENT (DANS MySQL)
     // =========================================================================
 
-    // On affiche la liste des patients du médecin qui est connecté
+    // On affiche la liste des patients REELS (ceux déjà validés)
     @GetMapping("/patients")
     public String listPatients(Model model, Authentication authentication) {
         String currentDoctor = authentication.getName();
-        List<PatientDTO> patients = patientProxy.getPatientsByDoctor(currentDoctor);
-        model.addAttribute("patients", patients);
+        // On récupère tout et on filtre pour ne pas voir les "Demandes" ici
+        List<PatientDTO> patients = patientProxy.getPatientsByDoctor(currentDoctor)
+                .stream()
+                .filter(p -> !"NOUVEAU DOSSIER".equals(p.getLastName()))
+                .toList();
 
-        // On retourne la vue dans le dossier patient
+        model.addAttribute("patients", patients);
         return "patient/patient-list";
     }
 
-    // On affiche le formulaire pour ajouter un nouveau patient
+    // NOUVEAU : On affiche seulement les nouveaux inscrits en attente de validation
+    @GetMapping("/patients/requests")
+    public String listRequests(Model model, Authentication authentication) {
+        String currentDoctor = authentication.getName();
+        // On filtre pour ne garder que ceux qui ont le nom par défaut "NOUVEAU DOSSIER"
+        List<PatientDTO> requests = patientProxy.getPatientsByDoctor(currentDoctor)
+                .stream()
+                .filter(p -> "NOUVEAU DOSSIER".equals(p.getLastName()))
+                .toList();
+
+        model.addAttribute("requests", requests);
+        return "patient/requests"; // On renvoie vers le nouveau fichier requests.html
+    }
+
+    // NOUVEAU : Quand on clique sur "Valider", on redirige vers le formulaire d'édition
+    // Comme ça le médecin peut remplir les vraies infos (Vrai Nom, Prénom, etc.)
+    @GetMapping("/patients/validate/{id}")
+    public String validatePatient(@PathVariable("id") Long id) {
+        return "redirect:/patients/edit/" + id;
+    }
+
+    // On affiche le formulaire pour ajouter un nouveau patient manuellement
     @GetMapping("/patients/add")
     public String showAddForm(Model model) {
         model.addAttribute("patient", new PatientDTO());
@@ -72,6 +96,8 @@ public class PatientController {
         patient.setId(id);
         patient.setDoctorUsername(authentication.getName());
         patientProxy.updatePatient(id, patient);
+
+        // Si on vient de valider un nouveau dossier, on retourne à la liste globale
         return "redirect:/patients";
     }
 
@@ -89,24 +115,17 @@ public class PatientController {
     // C'est ici qu'on affiche tout le dossier d'un patient (Infos + Notes + Messages)
     @GetMapping("/patients/notes/{id}")
     public String showPatientDossier(@PathVariable("id") Long id, Model model) {
-        // 1. On récupère les infos d'identité (via MySQL)
         PatientDTO patient = patientProxy.getPatientById(id);
-
-        // 2. On récupère les notes médicales (via MongoDB)
         List<NoteDTO> notes = noteProxy.getNotesByPatient(id);
-
-        // 3. On récupère aussi les messages de la messagerie (via MongoDB)
         List<MessageDTO> messages = noteProxy.getMessagesByPatient(id);
 
         model.addAttribute("patient", patient);
         model.addAttribute("notes", notes);
         model.addAttribute("messages", messages);
 
-        // On prépare des objets vides pour les formulaires d'ajout de note/message
         model.addAttribute("newNote", new NoteDTO());
         model.addAttribute("newMessage", new MessageDTO());
 
-        // On pointe vers le fichier dans le dossier patient
         return "patient/patient-dossier";
     }
 
@@ -124,17 +143,14 @@ public class PatientController {
     public String sendMessageToPatient(@PathVariable("id") Long id, @ModelAttribute("newMessage") MessageDTO message, Authentication authentication) {
         message.setPatientId(id);
         message.setSenderName("Dr. " + authentication.getName());
-
-        // On passe par le proxy des notes car elles partagent le même microservice MongoDB
         noteProxy.sendMessage(message);
-
         return "redirect:/patients/notes/" + id;
     }
 
     // Méthode pour supprimer une note spécifique dans MongoDB
     @GetMapping("/patients/notes/delete/{noteId}/{patientId}")
     public String deleteNote(@PathVariable("noteId") String noteId, @PathVariable("patientId") Long patientId) {
-        noteProxy.deleteNote(noteId); // Supprime le document dans la collection NoSQL
-        return "redirect:/patients/notes/" + patientId; // On recharge la page du dossier
+        noteProxy.deleteNote(noteId);
+        return "redirect:/patients/notes/" + patientId;
     }
 }

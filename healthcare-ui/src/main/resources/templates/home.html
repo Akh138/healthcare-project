@@ -15,22 +15,32 @@
         </svg>
     </div>
 
-    <!-- Bienvenue avec le pseudo -->
+    <!-- Bienvenue avec le pseudo de la personne connectée -->
     <h2>Bienvenue, Dr. <span sec:authentication="name">Nom</span></h2>
     <p class="subtitle">Session sécurisée - Espace <span th:text="${#authentication.authorities[0].authority == 'ROLE_ADMIN' ? 'Administrateur' : 'Médical'}">Rôle</span></p>
 
     <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px;">
 
-        <!-- BOUTONS POUR LES DOCTEURS -->
-        <a sec:authorize="hasRole('DOCTOR')" href="/patients" class="btn-primary" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 12px;">
-            <i class="fa-solid fa-hospital-user"></i> Gérer mes Patients
-        </a>
+        <!-- BOUTONS RÉSERVÉS AUX DOCTEURS -->
+        <div sec:authorize="hasRole('DOCTOR')" style="display: flex; flex-direction: column; gap: 15px;">
 
-        <a sec:authorize="hasRole('DOCTOR')" href="/consultations" class="btn-primary" style="background-color: #34495e; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 12px;">
-            <i class="fa-solid fa-calendar-check"></i> Mon Planning
-        </a>
+            <!-- Bouton pour voir ma liste de patients habituelle -->
+            <a href="/patients" class="btn-primary" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 12px;">
+                <i class="fa-solid fa-hospital-user"></i> Gérer mes Patients
+            </a>
 
-        <!-- SECTION ADMINISTRATION (C'est ici qu'on ajoute le bouton d'inscription) -->
+            <!-- NOUVEAU BOUTON : Pour valider les nouveaux patients qui se sont inscrits -->
+            <a href="/patients/requests" class="btn-primary" style="background-color: #2980b9; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 12px;">
+                <i class="fa-solid fa-user-check"></i> Demandes d'inscription
+            </a>
+
+            <!-- Bouton pour le planning -->
+            <a href="/consultations" class="btn-primary" style="background-color: #34495e; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 12px;">
+                <i class="fa-solid fa-calendar-check"></i> Mon Planning
+            </a>
+        </div>
+
+        <!-- SECTION ADMINISTRATION : visible seulement pour l'ADMIN -->
         <div sec:authorize="hasRole('ADMIN')" style="display: flex; flex-direction: column; gap: 15px;">
             <p style="font-weight: 700; font-size: 0.75rem; color: #64748b; text-transform: uppercase; margin: 0; text-align: center;">Administration</p>
 
@@ -42,7 +52,7 @@
                 <i class="fa-solid fa-users"></i> Gestion des Patients
             </a>
 
-            <!-- NOUVEAU BOUTON : Pour que l'admin crée des comptes médecins/admins -->
+            <!-- Bouton pour que l'admin crée des comptes médecins/admins -->
             <a href="/admin/signup" class="btn-primary" style="background-color: #16a085; text-decoration: none; text-align: center;">
                 <i class="fa-solid fa-user-plus"></i> Inscrire un Medecin ou Admin
             </a>

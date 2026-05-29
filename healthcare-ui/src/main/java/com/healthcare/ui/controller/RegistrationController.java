@@ -65,6 +65,11 @@ public class RegistrationController {
                 newFiche.setEmail(user.getUsername() + "@healthcare.com");
                 newFiche.setDoctorUsername(selectedDoctor);
 
+                // --- RÉPARATION ICI ---
+                // On enregistre bien le pseudo du patient dans sa fiche médicale
+                // C'est ce qui permet de retrouver son dossier quand il se connecte !
+                newFiche.setPatientUsername(user.getUsername());
+
                 patientProxy.createPatient(newFiche);
             }
 

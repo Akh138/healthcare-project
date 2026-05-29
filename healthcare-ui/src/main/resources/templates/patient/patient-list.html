@@ -14,24 +14,23 @@
             <h2 style="text-align: left; margin: 0;">Répertoire des Patients</h2>
             <p style="color: var(--text-light); margin: 5px 0 0 0; font-size: 0.9rem;">Consultez et gérez les dossiers patients</p>
         </div>
-        <a th:if="${patients != null}" href="/patients/add" class="btn-primary" style="width: auto; padding: 12px 24px;">
-            <i class="fa-solid fa-user-plus"></i> Nouveau Patient
-        </a>
+        <!-- J'ai enlevé le bouton "Nouveau Patient" ici parce que maintenant les patients
+             arrivent via les demandes d'inscription sur le dashboard principal -->
     </div>
 
-    <!-- CAS DE PANNE -->
+    <!-- SI LE SERVICE PATIENT NE RÉPOND PAS (CAS DE PANNE) -->
     <div th:if="${patients == null}" style="background-color: #fee2e2; color: #b91c1c; padding: 30px; border-radius: 15px; text-align: center; border: 1px solid #fecaca; margin: 20px 0;">
         <i class="fa-solid fa-triangle-exclamation" style="font-size: 2.5rem; margin-bottom: 10px;"></i>
         <p><strong>Service en maintenance</strong>. Injoignable pour le moment.</p>
     </div>
 
-    <!-- CAS VIDE -->
+    <!-- SI LA LISTE EST VIDE (PAS DE PATIENTS VALIDÉS) -->
     <div th:if="${patients != null && patients.isEmpty()}" style="background-color: #f8fafc; color: #64748b; padding: 50px; border-radius: 15px; text-align: center; border: 2px dashed #e2e8f0; margin: 20px 0;">
         <i class="fa-solid fa-folder-open" style="font-size: 2.5rem; margin-bottom: 15px; opacity: 0.5;"></i>
-        <p>Aucun patient enregistré.</p>
+        <p>Aucun patient enregistré pour le moment.</p>
     </div>
 
-    <!-- CAS NORMAL (TABLEAU) -->
+    <!-- LE TABLEAU DES PATIENTS (CEUX QUI SONT DÉJÀ VALIDÉS) -->
     <table th:if="${patients != null && !patients.isEmpty()}">
         <thead>
         <tr>
@@ -52,17 +51,17 @@
             <td th:text="${p.phone != null ? p.phone : '-'}"></td>
             <td style="text-align: center; display: flex; gap: 15px; justify-content: center;">
 
-                <!-- BOUTON DOSSIER MÉDICAL (Pour les notes MongoDB) -->
+                <!-- ICI POUR VOIR LE DOSSIER MÉDICAL (LES NOTES DANS MONGODB) -->
                 <a th:href="@{'/patients/notes/' + ${p.id}}">
                     <i class="fa-solid fa-file-medical" style="color: #34495e; cursor: pointer;" title="Dossier Médical"></i>
                 </a>
 
-                <!-- BOUTON MODIFIER -->
+                <!-- ICI POUR MODIFIER LA FICHE SI BESOIN -->
                 <a th:href="@{'/patients/edit/' + ${p.id}}">
                     <i class="fa-solid fa-pen-to-square" style="color: #f39c12; cursor: pointer;" title="Modifier"></i>
                 </a>
 
-                <!-- BOUTON SUPPRIMER -->
+                <!-- ICI POUR SUPPRIMER DÉFINITIVEMENT -->
                 <a th:href="@{'/patients/delete/' + ${p.id}}" onclick="return confirm('Supprimer définitivement ce patient ?')">
                     <i class="fa-solid fa-trash" style="color: #e74c3c; cursor: pointer;" title="Supprimer"></i>
                 </a>

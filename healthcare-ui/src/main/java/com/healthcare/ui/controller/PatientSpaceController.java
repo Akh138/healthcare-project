@@ -35,13 +35,15 @@ public class PatientSpaceController {
         // 1. Je cherche ma fiche médicale qui correspond à mon pseudo
         PatientDTO myProfile = patientProxy.getPatientByAccount(currentAccount);
 
-        // 2. Si jamais le médecin n'a pas encore créé ma fiche, j'affiche une page d'attente
-        if (myProfile == null) {
-            // On s'assure que no-dossier.html est bien dans le dossier patient/
+        // 2. AMÉLIORATION : Je vérifie si mon inscription est validée
+        // Si je n'ai pas de fiche OU si mon nom est encore "NOUVEAU DOSSIER"
+        // Ça veut dire que le médecin n'a pas encore validé ma demande.
+        if (myProfile == null || "NOUVEAU DOSSIER".equals(myProfile.getLastName())) {
+            // Dans ce cas, j'affiche la page qui dit "Dossier en attente"
             return "patient/no-dossier";
         }
 
-        // 3. Si tout est bon, je récupère mes notes et mes messages dans MongoDB
+        // 3. Si mon nom a été changé (validation faite), je peux voir mes notes et messages
         List<NoteDTO> notes = noteProxy.getNotesByPatient(myProfile.getId());
         List<MessageDTO> messages = noteProxy.getMessagesByPatient(myProfile.getId());
 
@@ -52,7 +54,7 @@ public class PatientSpaceController {
         // Je prépare un objet vide pour si je veux envoyer un message à mon médecin
         model.addAttribute("newMessage", new MessageDTO());
 
-        // On va chercher le fichier dans templates/patient/my-dossier.html
+        // J'affiche enfin mon vrai dossier médical !
         return "patient/my-dossier";
     }
 
@@ -64,7 +66,7 @@ public class PatientSpaceController {
 
         if (myProfile != null) {
             message.setPatientId(myProfile.getId());
-            // Je signe le message avec mon pseudo
+            // Je signe le message avec mon pseudo (ex: "katya")
             message.setSenderName(currentAccount);
             // J'envoie ça au microservice de messagerie (NoSQL)
             noteProxy.sendMessage(message);
