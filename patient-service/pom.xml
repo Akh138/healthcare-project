@@ -51,6 +51,14 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- BASE DE DONNÉES DE TEST (H2) -->
+        <!-- Je l'ajoute pour pouvoir faire mes tests d'intégration sans MySQL -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Tools -->
         <dependency>
             <groupId>org.projectlombok</groupId>

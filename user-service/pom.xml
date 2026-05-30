@@ -51,6 +51,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- BASE DE TEST (H2) : Elle permet de tester sans avoir besoin de MySQL ou Docker -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Tools -->
         <dependency>
             <groupId>org.projectlombok</groupId>
