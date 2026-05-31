@@ -127,4 +127,14 @@ public class RegistrationController {
         }
         return "home";
     }
+
+    // --- ROUTE TEMPORAIRE POUR TESTER LA PAGE 500 ---
+    /*
+    @GetMapping("/test-500")
+    public String triggerCrash() {
+        // On force un crash (division par zéro) pour déclencher l'erreur 500
+        int crash = 10 / 0;
+        return "home";
+    }
+    */
 }

@@ -17,8 +17,17 @@
 
     <form th:action="@{'/patients/update/' + ${patient.id}}" th:object="${patient}" method="post">
 
-        <!-- On garde l'ID caché pour que le service sache qui modifier -->
+        <!-- --- RÉPARATION : ON GARDE LES INFOS CRUCIALES CACHÉES --- -->
+        <!-- On garde l'ID pour savoir qui on modifie -->
         <input type="hidden" th:field="*{id}" />
+
+        <!-- TRÈS IMPORTANT : On garde le pseudo du patient pour ne pas l'effacer en base ! -->
+        <input type="hidden" th:field="*{patientUsername}" />
+
+        <!-- On garde aussi le médecin et la photo pour pas qu'ils disparaissent -->
+        <input type="hidden" th:field="*{doctorUsername}" />
+        <input type="hidden" th:field="*{profilePicture}" />
+        <!-- ------------------------------------------------------- -->
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <div class="input-group">

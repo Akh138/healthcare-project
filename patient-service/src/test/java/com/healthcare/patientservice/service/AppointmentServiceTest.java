@@ -1,5 +1,6 @@
 package com.healthcare.patientservice.service;
 
+import com.healthcare.patientservice.exception.ResourceNotFoundException; // J'importe mon erreur perso
 import com.healthcare.patientservice.model.Appointment;
 import com.healthcare.patientservice.repository.AppointmentRepository;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * TEST UNITAIRE DU SERVICE DES RENDEZ-VOUS.
- * Ici, on vérifie que la gestion du planning fonctionne bien avec les bons noms de méthodes.
+ * J'ai mis à jour les tests pour qu'ils passent ma nouvelle sécurité (existsById).
  */
 @ExtendWith(MockitoExtension.class)
 public class AppointmentServiceTest {
@@ -27,52 +28,59 @@ public class AppointmentServiceTest {
     private AppointmentRepository appointmentRepository; // Mon simulateur de base de données
 
     @InjectMocks
-    private AppointmentService appointmentService; // Mon service où on teste la logique
+    private AppointmentService appointmentService; // Mon service à tester
 
-    // --- TEST 1 : RÉCUPÉRER LE PLANNING D'UN MÉDECIN ---
+    // --- TEST 1 : VOIR LE PLANNING ---
     @Test
     public void testGetAppointmentsByDoctor_ShouldReturnList() {
-        // 1. PRÉPARER
         String doctor = "ines";
-
-        // ATTENTION : J'utilise ici le nom EXACT de la méthode de ton Repository
         when(appointmentRepository.findByDoctorUsernameOrderByDateTimeAsc(doctor))
                 .thenReturn(Arrays.asList(new Appointment(), new Appointment()));
 
-        // 2. AGIR
         List<Appointment> result = appointmentService.getAppointmentsByDoctor(doctor);
 
-        // 3. VÉRIFIER
         assertEquals(2, result.size());
-        // On vérifie que le service a bien appelé la méthode avec le bon nom
         verify(appointmentRepository, times(1)).findByDoctorUsernameOrderByDateTimeAsc(doctor);
     }
 
-    // --- TEST 2 : CRÉER UN NOUVEAU RENDEZ-VOUS ---
+    // --- TEST 2 : CRÉER UN RDV ---
     @Test
     public void testCreateAppointment_ShouldReturnSavedAppointment() {
-        // 1. PRÉPARER
         Appointment input = new Appointment(null, 1L, "Katya", "ines", LocalDateTime.now(), "Contrôle");
         Appointment saved = new Appointment(10L, 1L, "Katya", "ines", LocalDateTime.now(), "Contrôle");
 
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(saved);
 
-        // 2. AGIR
         Appointment result = appointmentService.createAppointment(input);
 
-        // 3. VÉRIFIER
         assertNotNull(result.getId());
         assertEquals("Katya", result.getPatientName());
         verify(appointmentRepository, times(1)).save(any(Appointment.class));
     }
 
-    // --- TEST 3 : ANNULER (SUPPRIMER) UN RENDEZ-VOUS ---
+    // --- TEST 3 : ANNULER UN RDV QUAND IL EXISTE (CORRIGÉ) ---
     @Test
     public void testDeleteAppointment_ShouldCallRepository() {
-        // 1. AGIR : On demande de supprimer le rendez-vous n°10
+        // 1. PRÉPARER : Je dis au simulateur que le RDV n°10 EXISTE bien
+        // C'est ça qui manquait pour passer le "if" dans mon code !
+        when(appointmentRepository.existsById(10L)).thenReturn(true);
+
+        // 2. AGIR
         appointmentService.deleteAppointment(10L);
 
-        // 2. VÉRIFIER
+        // 3. VÉRIFIER
         verify(appointmentRepository, times(1)).deleteById(10L);
+    }
+
+    // --- TEST 4 : VÉRIFIER L'ERREUR SI LE RDV N'EXISTE PAS (POUR LE 100%) ---
+    @Test
+    public void testDeleteAppointment_NotFound_ShouldThrowException() {
+        // 1. Je simule le cas où le RDV n'existe pas
+        when(appointmentRepository.existsById(99L)).thenReturn(false);
+
+        // 2. Je vérifie que ça lance bien mon erreur 404 perso
+        assertThrows(ResourceNotFoundException.class, () -> {
+            appointmentService.deleteAppointment(99L);
+        });
     }
 }

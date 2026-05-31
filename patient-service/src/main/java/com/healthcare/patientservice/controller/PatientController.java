@@ -1,5 +1,6 @@
 package com.healthcare.patientservice.controller;
 
+import com.healthcare.patientservice.exception.ResourceNotFoundException;
 import com.healthcare.patientservice.model.Patient;
 import com.healthcare.patientservice.service.PatientService;
 import jakarta.validation.Valid;
@@ -7,12 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 /**
- * C'EST LE CONTRÔLEUR REST POUR LES PATIENTS.
- * Il permet de faire toutes les opérations (CRUD) via des requêtes HTTP.
+ * MON API REST POUR LES PATIENTS.
+ * Grâce au GlobalExceptionHandler, mes méthodes sont plus courtes et plus lisibles !
  */
 @RestController
 @RequestMapping("/api/patients")
@@ -21,62 +21,54 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
-    // J'AFFICHE TOUS LES PATIENTS DU SYSTÈME (UTILE POUR L'ADMIN)
+    // Je renvoie la liste de tous les patients (200 OK)
     @GetMapping
     public ResponseEntity<List<Patient>> getAllPatients() {
-        List<Patient> patients = patientService.getAllPatients();
-        // On renvoie un code 200 OK avec la liste
-        return ResponseEntity.ok(patients);
+        return ResponseEntity.ok(patientService.getAllPatients());
     }
 
-    // J'AFFICHE LES PATIENTS D'UN MÉDECIN PRÉCIS
+    // Je renvoie les patients d'un médecin précis
     @GetMapping("/doctor/{username}")
     public ResponseEntity<List<Patient>> getPatientsByDoctor(@PathVariable String username) {
-        List<Patient> patients = patientService.getPatientsByDoctor(username);
-        return ResponseEntity.ok(patients);
+        return ResponseEntity.ok(patientService.getPatientsByDoctor(username));
     }
 
-    // JE RÉCUPÈRE LES INFOS D'UN SEUL PATIENT PAR SON ID
+    // Je cherche un seul patient par son ID
     @GetMapping("/{id}")
     public ResponseEntity<Patient> getPatientById(@PathVariable Long id) {
+        // PLUS BESOIN DE IF/ELSE : Si c'est vide, l'erreur 404 est lancée par le service
         return patientService.getPatientById(id)
-                .map(ResponseEntity::ok) // Si trouvé -> 200 OK
-                .orElse(ResponseEntity.notFound().build()); // Sinon -> 404 Not Found
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new ResourceNotFoundException("Ce patient n'existe pas"));
     }
 
-    // JE CRÉE UN NOUVEAU PATIENT
+    // Je crée un nouveau patient (201 Created)
     @PostMapping
     public ResponseEntity<Patient> createPatient(@Valid @RequestBody Patient patient) {
-        Patient createdPatient = patientService.createPatient(patient);
-        // TOUCHE PRO : On renvoie un code 201 (CREATED) au lieu de 200
-        return new ResponseEntity<>(createdPatient, HttpStatus.CREATED);
+        Patient created = patientService.createPatient(patient);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    // JE METS À JOUR LA FICHE D'UN PATIENT
+    // Je mets à jour une fiche patient
     @PutMapping("/{id}")
     public ResponseEntity<Patient> updatePatient(@PathVariable Long id, @Valid @RequestBody Patient patientDetails) {
-        try {
-            Patient updatedPatient = patientService.updatePatient(id, patientDetails);
-            return ResponseEntity.ok(updatedPatient);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        // TOUCHE PRO : On a enlevé le try/catch !
+        // Le surveillant s'occupera de l'erreur si le patient n'existe pas.
+        return ResponseEntity.ok(patientService.updatePatient(id, patientDetails));
     }
 
-    // JE SUPPRIME UN PATIENT
+    // Je supprime un patient (204 No Content)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePatient(@PathVariable Long id) {
         patientService.deletePatient(id);
-        // TOUCHE PRO : On renvoie 204 (NO CONTENT) car il n'y a plus rien à afficher
         return ResponseEntity.noContent().build();
     }
 
-    // JE CHERCHE LE PROFIL D'UN PATIENT PAR SON NOM DE COMPTE
+    // Je cherche une fiche via le nom de compte utilisateur
     @GetMapping("/account/{username}")
     public ResponseEntity<Patient> getPatientByAccount(@PathVariable String username) {
         return patientService.getPatientByAccount(username)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Compte patient introuvable"));
     }
-
 }

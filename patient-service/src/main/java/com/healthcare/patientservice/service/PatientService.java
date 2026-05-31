@@ -1,10 +1,10 @@
 package com.healthcare.patientservice.service;
 
+import com.healthcare.patientservice.exception.ResourceNotFoundException; // J'importe mon erreur perso
 import com.healthcare.patientservice.model.Patient;
 import com.healthcare.patientservice.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -14,31 +14,33 @@ public class PatientService {
     @Autowired
     private PatientRepository patientRepository;
 
-    // Récupérer TOUS les patients de la base (utile pour l'Admin plus tard)
+    // Je récupère TOUS les patients (utile pour l'Admin)
     public List<Patient> getAllPatients() {
         return patientRepository.findAll();
     }
 
-    // NOUVEAU : Récupérer seulement les patients d'un médecin précis
+    // Je récupère seulement les patients d'un docteur précis
     public List<Patient> getPatientsByDoctor(String username) {
         return patientRepository.findByDoctorUsername(username);
     }
 
-    // Trouver un patient par son numéro ID
+    // Je cherche un patient par son ID unique
     public Optional<Patient> getPatientById(Long id) {
         return patientRepository.findById(id);
     }
 
-    // Enregistrer un nouveau patient
+    // J'enregistre un nouveau patient dans MySQL
     public Patient createPatient(Patient patient) {
         return patientRepository.save(patient);
     }
 
-    // Mettre à jour les infos d'un patient existant
+    // JE METS À JOUR LES INFOS D'UN PATIENT
     public Patient updatePatient(Long id, Patient patientDetails) {
+        // TECHNIQUE PRO : Si l'ID n'existe pas, je lance tout de suite mon erreur 404
         Patient patient = patientRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Patient non trouvé"));
+                .orElseThrow(() -> new ResourceNotFoundException("Patient introuvable avec l'id : " + id));
 
+        // Si on l'a trouvé, on met à jour tous les champs
         patient.setFirstName(patientDetails.getFirstName());
         patient.setLastName(patientDetails.getLastName());
         patient.setBirthday(patientDetails.getBirthday());
@@ -47,18 +49,23 @@ public class PatientService {
         patient.setPhone(patientDetails.getPhone());
         patient.setEmail(patientDetails.getEmail());
         patient.setProfilePicture(patientDetails.getProfilePicture());
-
-        // On n'oublie pas de garder le lien avec le médecin
         patient.setDoctorUsername(patientDetails.getDoctorUsername());
+        patient.setPatientUsername(patientDetails.getPatientUsername());
 
+        // Je sauvegarde les changements
         return patientRepository.save(patient);
     }
 
-    // Supprimer un patient
+    // JE SUPPRIME UN PATIENT
     public void deletePatient(Long id) {
+        // Je vérifie d'abord s'il existe en base pour ne pas faire d'erreur bête
+        if (!patientRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Impossible de supprimer : Patient non trouvé");
+        }
         patientRepository.deleteById(id);
     }
 
+    // Je cherche le profil d'un patient par son pseudo (pour son espace perso)
     public Optional<Patient> getPatientByAccount(String username) {
         return patientRepository.findByPatientUsername(username);
     }
