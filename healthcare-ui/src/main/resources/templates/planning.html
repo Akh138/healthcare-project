@@ -3,89 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <title>Mon Planning - Healthcare</title>
+    <!-- J'appelle mon ADN commun et mon style planning pro -->
     <link rel="stylesheet" th:href="@{/css/common.css}">
-    <!-- Icônes FontAwesome -->
+    <link rel="stylesheet" th:href="@{/css/planning.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body style="display: flex; flex-direction: column; align-items: center; padding-top: 50px;">
+<body>
 
-<div class="container-large">
-    <h2 style="text-align: left;"><i class="fa-solid fa-calendar-days"></i> Mon Planning de Consultations</h2>
+<!-- MA VITRE PRINCIPALE (Format 850px Compact) -->
+<div class="glass-card glass-card-planning">
 
-    <!-- FORMULAIRE D'AJOUT RAPIDE (Restylé pour le nouveau look) -->
-    <form th:action="@{/consultations/add}" th:object="${newAppointment}" method="post"
-          style="background: #f8fafc; padding: 25px; border-radius: 20px; display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 15px; align-items: end; border: 1px solid #eef2f7;">
+    <h2 style="font-size: 1.5rem; margin-bottom: 20px; letter-spacing: 1px;">
+        <i class="fa-solid fa-calendar-check" style="color: var(--medical-green); margin-right: 12px;"></i>
+        Mon Planning
+    </h2>
+
+    <!-- MON FORMULAIRE D'AJOUT (Style Glassmorphism intégré) -->
+    <form th:action="@{/consultations/add}" th:object="${newAppointment}" method="post" class="quick-add-box">
 
         <div>
-            <label>PATIENT</label>
-            <i class="fa-solid fa-user-injured" style="position: absolute; margin: 12px 15px; color: var(--text-light); z-index: 1;"></i>
-            <select th:field="*{patientId}" class="form-control" style="margin-bottom: 0; padding-left: 40px;" required>
-                <option value="">-- Sélectionner --</option>
+            <label>Patient</label>
+            <select th:field="*{patientId}" class="form-control" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); padding-left: 10px;" required>
+                <option value="">Sélectionner...</option>
                 <option th:each="p : ${patients}" th:value="${p.id}" th:text="${p.lastName.toUpperCase() + ' ' + p.firstName}"></option>
             </select>
         </div>
 
         <div>
-            <label>DATE ET HEURE</label>
-            <input type="datetime-local" th:field="*{dateTime}" class="form-control" style="margin-bottom: 0; padding-left: 15px;" required />
+            <label>Date & Heure</label>
+            <input type="datetime-local" th:field="*{dateTime}" class="form-control" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); padding: 0 10px;" required />
         </div>
 
         <div>
-            <label>MOTIF DE VISITE</label>
-            <input type="text" th:field="*{reason}" class="form-control" style="margin-bottom: 0; padding-left: 15px;" placeholder="ex: Consultation annuelle" required />
+            <label>Motif de visite</label>
+            <input type="text" th:field="*{reason}" class="form-control" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); padding: 0 10px;" placeholder="Ex: Contrôle" required />
         </div>
 
-        <button type="submit" class="btn-primary" style="width: auto; height: 48px; margin: 0; padding: 0 30px;">AJOUTER</button>
+        <button type="submit" class="btn-primary" style="height: 40px; padding: 0 20px; font-size: 0.7rem;">
+            <i class="fa-solid fa-plus"></i> AJOUTER
+        </button>
     </form>
 
-    <!-- NOUVELLE SECTION AGENDA (Remplace le tableau) -->
-    <div class="agenda-container">
+    <!-- MON AGENDA (Timeline) -->
+    <div class="agenda-scroll">
 
-        <!-- On boucle sur chaque rendez-vous -->
+        <!-- Cas : Liste vide -->
+        <div th:if="${#lists.isEmpty(appointments)}" style="text-align: center; padding: 40px; opacity: 0.5;">
+            <i class="fa-solid fa-calendar-day" style="font-size: 3rem; margin-bottom: 10px;"></i>
+            <p>Aucune consultation aujourd'hui.</p>
+        </div>
+
+        <!-- Cas : On a des rendez-vous -->
         <div th:each="a : ${appointments}" class="appointment-card">
 
-            <!-- Bloc Heure à gauche -->
-            <div class="appointment-time">
-                <div class="time-hour" th:text="${#temporals.format(a.dateTime, 'HH:mm')}"></div>
-                <div class="time-date" th:text="${#temporals.format(a.dateTime, 'dd MMM')}"></div>
+            <!-- HEURE ET DATE -->
+            <div class="time-block">
+                <div class="time-hour" th:text="${#temporals.format(a.dateTime, 'HH:mm')}">14:00</div>
+                <div class="time-date" th:text="${#temporals.format(a.dateTime, 'dd MMM')}">04 JUIN</div>
             </div>
 
-            <!-- Bloc Info au centre -->
-            <div class="appointment-info">
-                <p class="patient-name-label" th:text="${a.patientName}"></p>
-                <span class="reason-tag">
-                    <i class="fa-solid fa-stethoscope" style="font-size: 0.7rem; margin-right: 5px;"></i>
-                    <span th:text="${a.reason}"></span>
+            <!-- INFOS PATIENT -->
+            <div class="info-block">
+                <p class="patient-name" th:text="${a.patientName}">NOM Prénom</p>
+                <span class="visit-reason">
+                    <i class="fa-solid fa-stethoscope"></i> <span th:text="${a.reason}">Consultation</span>
                 </span>
             </div>
 
-            <!-- Bloc Actions à droite -->
-            <div style="display: flex; align-items: center; gap: 20px;">
-                <!-- Accès direct au dossier médical du patient -->
-                <a th:href="@{'/patients/notes/' + ${a.patientId}}" title="Ouvrir le dossier médical">
-                    <i class="fa-solid fa-folder-open" style="color: #cbd5e1; cursor: pointer; font-size: 1.2rem; transition: 0.3s;" onmouseover="this.style.color='#3498db'" onmouseout="this.style.color='#cbd5e1'"></i>
+            <!-- ACTIONS -->
+            <div class="action-icons">
+                <a th:href="@{'/patients/notes/' + ${a.patientId}}" title="Dossier Médical">
+                    <i class="fa-solid fa-folder-open btn-icon icon-folder"></i>
                 </a>
-
-                <!-- Bouton d'annulation (poubelle rouge) -->
-                <a th:href="@{'/consultations/delete/' + ${a.id}}" onclick="return confirm('Souhaitez-vous vraiment annuler ce rendez-vous ?')" title="Annuler le RDV">
-                    <i class="fa-solid fa-circle-xmark" style="color: #fca5a5; cursor: pointer; font-size: 1.2rem; transition: 0.3s;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#fca5a5'"></i>
+                <a th:href="@{'/consultations/delete/' + ${a.id}}" onclick="return confirm('Annuler ce RDV ?')" title="Annuler">
+                    <i class="fa-solid fa-circle-xmark btn-icon icon-cancel"></i>
                 </a>
             </div>
-        </div>
-
-        <!-- Si le planning est vide -->
-        <div th:if="${#lists.isEmpty(appointments)}" style="text-align: center; padding: 60px 0; color: var(--text-light);">
-            <i class="fa-solid fa-calendar-day" style="font-size: 3.5rem; opacity: 0.15; margin-bottom: 15px;"></i>
-            <p style="font-weight: 600;">Aucun rendez-vous planifié.</p>
-            <p style="font-size: 0.85rem;">Utilisez le formulaire ci-dessus pour ajouter des consultations.</p>
         </div>
 
     </div>
 
-    <!-- Lien de retour -->
-    <div style="margin-top: 40px; border-top: 1px solid #f1f5f9; padding-top: 20px;">
-        <a href="/home" class="footer-link" style="text-align: left; font-weight: 600;">
-            <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+    <!-- RETOUR -->
+    <div class="back-footer">
+        <a href="/home" class="btn-primary" style="background: none; border: 1px solid var(--glass-border); font-size: 0.65rem; width: auto; padding: 8px 20px;">
+            <i class="fa-solid fa-chevron-left"></i> RETOUR AU TABLEAU DE BORD
         </a>
     </div>
 </div>

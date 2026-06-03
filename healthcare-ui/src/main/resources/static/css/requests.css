@@ -1,0 +1,126 @@
+/* ===============================================================
+   STYLE DES DEMANDES D'INSCRIPTION (FILTRE & VALIDATION)
+   =============================================================== */
+
+/* MA CARTE : Format 780px validé pour voir les contours et le halo */
+.glass-card-large {
+    width: 90%;
+    max-width: 780px;
+    padding: 20px 30px;
+}
+
+.page-header {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.page-header h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--text-white);
+}
+
+.subtitle {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+}
+
+/* --- MON ÉTAT VIDE (Quand tout est traité) --- */
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    border: 1px dashed var(--glass-border);
+    margin: 20px 0;
+}
+
+.empty-state i {
+    color: var(--medical-green);
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.3));
+}
+
+/* --- MON TABLEAU DE TRI --- */
+.table-responsive {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Alignements équilibrés */
+th:first-child, td:first-child { text-align: left; }
+th:nth-child(2), td:nth-child(2),
+th:nth-child(3), td:nth-child(3) { text-align: center; }
+th:last-child, td:last-child { text-align: right; }
+
+/* TITRES NAVY BLUE (Style Institutionnel) */
+th {
+    padding: 12px 5px;
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #0a192f; /* Mon bleu marine sombre pour la lisibilité */
+    font-weight: 800;
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(10px);
+    border-bottom: 1.5px solid rgba(16, 185, 129, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+td {
+    padding: 10px 5px;
+    color: var(--text-white);
+    font-size: 0.8rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+tbody tr:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* BOUTON DE VALIDATION (Plus compact et pro) */
+.btn-validate {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: var(--medical-green);
+    color: #0f172a;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+.btn-validate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    filter: brightness(1.1);
+}
+
+/* FOOTER RETOUR */
+.back-footer {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.btn-back {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}

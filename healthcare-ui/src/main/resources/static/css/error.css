@@ -1,0 +1,67 @@
+/* ===============================================================
+   STYLE DES PAGES D'ERREURS (404 / 500)
+   =============================================================== */
+
+/* MA CARTE : Format compact validé pour le centrage parfait */
+.glass-card-error {
+    width: 90%;
+    max-width: 450px;
+    padding: 40px;
+    text-align: center;
+}
+
+/* MON ICÔNE D'ERREUR (Animée en flottement) */
+.error-icon-box {
+    width: 80px;
+    height: 80px;
+    background: #0f172a;
+    border: 2.5px solid var(--medical-green);
+    border-radius: 20px;
+    margin: 0 auto 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--medical-green);
+    font-size: 2.2rem;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+    animation: floatError 3s infinite ease-in-out;
+}
+
+/* LE CODE ERREUR (404 ou 500) */
+.error-code {
+    font-size: 4.5rem;
+    font-weight: 800;
+    color: white;
+    margin: 0;
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+h2 {
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 10px 0;
+    color: var(--medical-green); /* Titre en vert pour le style */
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+    margin-bottom: 30px;
+}
+
+/* BOUTON RETOUR : Toujours le vert brillant */
+.btn-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 30px;
+}
+
+/* ANIMATION DE FLOTTEMENT */
+@keyframes floatError {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}

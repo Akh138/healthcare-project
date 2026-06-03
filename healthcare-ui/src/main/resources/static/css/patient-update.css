@@ -1,0 +1,128 @@
+/* ===============================================================
+   STYLE DE LA MODIFICATION (RÉGLAGE FINAL DES ICÔNES)
+   =============================================================== */
+
+/* MA CARTE : Format Ultra-Compact validé */
+.glass-card-update {
+    width: 90%;
+    max-width: 480px;
+    padding: 15px 30px;
+}
+
+/* MON LOGO : Version compacte */
+.brand-icon {
+    width: 45px;
+    height: 45px;
+    background: #0f172a;
+    border: 2px solid var(--medical-green);
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--medical-green);
+    font-size: 1.1rem;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+    animation: pulseHeart 2s infinite ease-in-out;
+}
+
+h2 {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-white);
+}
+
+.subtitle {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    margin-bottom: 15px;
+}
+
+/* --- MA GRILLE COMPACTE : J'augmente le GAP horizontal à 30px pour séparer les icônes --- */
+.input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 30px; /* J'ai mis 30px d'espace pour que les icônes ne se touchent plus */
+    margin-bottom: 8px;
+}
+
+/* --- MES INPUTS RÉACTIFS --- */
+.input-group {
+    position: relative;
+    margin-bottom: 12px;
+    border-bottom: 1.2px solid rgba(255, 255, 255, 0.2);
+    transition: 0.3s;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-bottom: 3px;
+    text-transform: uppercase;
+}
+
+.input-group i {
+    position: absolute;
+    left: 0;
+    bottom: 8px;
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    transition: 0.3s;
+}
+
+/* L'effet de focus que j'aime bien */
+.input-group:focus-within {
+    border-bottom-color: var(--text-white);
+}
+
+.input-group:focus-within i {
+    color: var(--medical-green);
+    transform: scale(1.1);
+}
+
+.form-control {
+    width: 100%;
+    padding: 6px 0 6px 25px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 0.8rem;
+    outline: none;
+}
+
+select.form-control option {
+    background-color: #1e3a8a;
+    color: white;
+}
+
+.btn-save {
+    margin-top: 8px;
+    padding: 12px;
+    font-size: 0.8rem;
+}
+
+.back-footer {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.btn-cancel {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.7rem;
+    transition: 0.3s;
+}
+
+.btn-cancel:hover { color: #f87171; }
+
+@keyframes pulseHeart {
+    0%, 20%, 40%, 100% { transform: scale(1); }
+    10%, 30% { transform: scale(1.1); }
+}

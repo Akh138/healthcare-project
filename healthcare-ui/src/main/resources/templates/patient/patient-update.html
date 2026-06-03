@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Modifier Patient - Healthcare</title>
+    <!-- J'utilise ma base et mon style spécifique avec le gap corrigé -->
     <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/patient-update.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<div class="container-card" style="max-width: 550px;">
+
+<!-- MA CARTE VERSION ULTRA-COMPACTE -->
+<div class="glass-card glass-card-update">
+
     <div class="brand-icon">
         <i class="fa-solid fa-user-pen"></i>
     </div>
@@ -17,21 +22,16 @@
 
     <form th:action="@{'/patients/update/' + ${patient.id}}" th:object="${patient}" method="post">
 
-        <!-- --- RÉPARATION : ON GARDE LES INFOS CRUCIALES CACHÉES --- -->
-        <!-- On garde l'ID pour savoir qui on modifie -->
+        <!-- SÉCURITÉ : Champs cachés pour le backend -->
         <input type="hidden" th:field="*{id}" />
-
-        <!-- TRÈS IMPORTANT : On garde le pseudo du patient pour ne pas l'effacer en base ! -->
         <input type="hidden" th:field="*{patientUsername}" />
-
-        <!-- On garde aussi le médecin et la photo pour pas qu'ils disparaissent -->
         <input type="hidden" th:field="*{doctorUsername}" />
         <input type="hidden" th:field="*{profilePicture}" />
-        <!-- ------------------------------------------------------- -->
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <!-- MA GRILLE AVEC ESPACEMENT CORRIGÉ : NOM ET PRÉNOM -->
+        <div class="input-grid">
             <div class="input-group">
-                <label>Nom</label>
+                <label>Nom de famille</label>
                 <i class="fa-solid fa-id-card"></i>
                 <input type="text" th:field="*{lastName}" class="form-control" required />
             </div>
@@ -42,7 +42,8 @@
             </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <!-- MA GRILLE AVEC ESPACEMENT CORRIGÉ : NAISSANCE ET GENRE -->
+        <div class="input-grid">
             <div class="input-group">
                 <label>Date de Naissance</label>
                 <i class="fa-solid fa-calendar-days"></i>
@@ -51,37 +52,44 @@
             <div class="input-group">
                 <label>Genre</label>
                 <i class="fa-solid fa-venus-mars"></i>
-                <select th:field="*{gender}" class="form-control" style="padding-left: 45px;">
-                    <option value="M">Masculin</option>
-                    <option value="F">Féminin</option>
+                <select th:field="*{gender}" class="form-control">
+                    <option value="M">Masculin (M)</option>
+                    <option value="F">Féminin (F)</option>
                 </select>
             </div>
         </div>
 
+        <!-- CHAMPS PLEINE LARGEUR -->
         <div class="input-group">
-            <label>Email</label>
+            <label>Email de contact</label>
             <i class="fa-solid fa-envelope"></i>
             <input type="email" th:field="*{email}" class="form-control" required />
         </div>
 
         <div class="input-group">
-            <label>Téléphone</label>
+            <label>Numéro de téléphone</label>
             <i class="fa-solid fa-phone"></i>
             <input type="text" th:field="*{phone}" class="form-control" required />
         </div>
 
         <div class="input-group">
-            <label>Adresse</label>
+            <label>Adresse postale</label>
             <i class="fa-solid fa-location-dot"></i>
             <input type="text" th:field="*{address}" class="form-control" required />
         </div>
 
-        <button type="submit" class="btn-primary">ENREGISTRER LES MODIFICATIONS</button>
+        <!-- BOUTON DE VALIDATION -->
+        <button type="submit" class="btn-primary btn-save">
+            <i class="fa-solid fa-floppy-disk"></i> ENREGISTRER LES MODIFICATIONS
+        </button>
     </form>
 
-    <div class="footer-link">
-        <a href="/patients" style="color: var(--text-light);">Annuler</a>
+    <div class="back-footer">
+        <a href="/patients" class="btn-cancel">
+            <i class="fa-solid fa-xmark"></i> Annuler et quitter
+        </a>
     </div>
 </div>
+
 </body>
 </html>

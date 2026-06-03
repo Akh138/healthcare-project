@@ -3,24 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Erreur Serveur - Healthcare</title>
+    <!-- J'utilise ma base commune et mon style d'erreur pour garder l'unité visuelle -->
     <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/error.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body style="display: flex; flex-direction: column; align-items: center; padding-top: 100px;">
+<body>
 
-<div class="container-card" style="text-align: center; max-width: 500px;">
-    <div class="brand-icon" style="background-color: #f1f5f9; margin-bottom: 20px;">
-        <!-- Une icône de panneau attention -->
-        <i class="fa-solid fa-map-location-dot" style="color: #64748b; font-size: 2rem;"></i>
+<!-- MA CARTE ERREUR GLASS (Format compact validé) -->
+<div class="glass-card glass-card-error">
+
+    <!-- MON ICÔNE TECHNIQUE ANIMÉE -->
+    <div class="error-icon-box">
+        <i class="fa-solid fa-microchip"></i>
     </div>
 
-    <h1 style="font-size: 3rem; color: var(--primary-blue); margin: 0;">500</h1>
-    <h2>Oups ! Erreur Serveur</h2>
-    <p class="subtitle">Une erreur interne s'est produite. Nos équipes techniques sont sur le coup.</p>
+    <!-- CODE ERREUR GÉANT AVEC LUEUR -->
+    <h1 class="error-code">500</h1>
+    <h2>Erreur Interne</h2>
 
-    <div style="margin-top: 30px;">
-        <a href="/home" class="btn-primary" style="text-decoration: none;">
-            <i class="fa-solid fa-house"></i> Retour à l'accueil
+    <p class="subtitle">
+        Une anomalie technique est survenue sur nos serveurs. <br>
+        <b>Nos techniciens sont déjà sur le coup pour rétablir le service.</b>
+    </p>
+
+    <!-- BOUTON DE RETOUR SÉCURISÉ -->
+    <div class="back-footer">
+        <a href="/home" class="btn-primary btn-home">
+            <i class="fa-solid fa-house-medical"></i> RETOUR AU DASHBOARD
         </a>
     </div>
 </div>

@@ -1,0 +1,163 @@
+/* ===============================================================
+   STYLE DU RÉPERTOIRE PATIENTS (VUE MÉDECIN - 780px)
+   =============================================================== */
+
+/* MA CARTE : Je garde la largeur de 780px pour que le contour soit bien visible */
+.glass-card-large {
+    width: 95%;
+    max-width: 780px;
+    padding: 20px 30px;
+}
+
+/* EN-TÊTE DE PAGE */
+.page-header {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.page-header h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--text-white);
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-top: 2px;
+}
+
+/* --- COMMANDES : RECHERCHE ET COMPTEUR --- */
+.table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.search-wrapper {
+    position: relative;
+    flex: 1;
+    max-width: 250px;
+}
+
+.search-wrapper i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--medical-green);
+    font-size: 0.8rem;
+}
+
+.search-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    padding: 7px 12px 7px 32px;
+    border-radius: 10px;
+    color: white;
+    font-size: 0.75rem;
+    outline: none;
+    transition: 0.3s;
+}
+
+.search-input:focus {
+    border-color: var(--medical-green);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+}
+
+/* ===============================================================
+   MA ZONE DE SCROLL (Évite que la carte ne sorte de l'écran)
+   =============================================================== */
+.table-responsive {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 5px;
+}
+
+/* SCROLLBAR DISCRÈTE ET VERTE */
+.table-responsive::-webkit-scrollbar { width: 4px; }
+.table-responsive::-webkit-scrollbar-thumb {
+    background: var(--medical-green);
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* ALIGNEMENTS ÉQUILIBRÉS */
+th:first-child, td:first-child { text-align: left; }
+th:nth-child(2), td:nth-child(2),
+th:nth-child(3), td:nth-child(3),
+th:nth-child(4), td:nth-child(4),
+th:nth-child(5), td:nth-child(5) { text-align: center; }
+th:last-child, td:last-child { text-align: right; }
+
+/* TITRES NAVY BLUE (Sticky Glass) */
+th {
+    padding: 12px 5px;
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #1e3a8a; /* Mon bleu marine pro */
+    font-weight: 800;
+
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(10px);
+    border-bottom: 1.5px solid rgba(30, 58, 138, 0.3);
+
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+td {
+    padding: 10px 5px;
+    color: var(--text-white);
+    font-size: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+tbody tr:hover { background: rgba(255, 255, 255, 0.08); }
+
+/* MES ÉTATS D'ALERTE (Maintenance / Liste Vide) */
+.alert-glass {
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    margin: 20px 0;
+}
+
+.alert-error { color: #f87171; border-color: rgba(248, 113, 113, 0.3); }
+
+/* BOUTONS D'ACTIONS */
+.action-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.btn-action { font-size: 0.85rem; transition: 0.3s; opacity: 0.7; }
+.btn-action:hover { opacity: 1; transform: scale(1.2); }
+
+.icon-dossier { color: var(--text-white); }
+.icon-edit { color: #f59e0b; }
+.icon-delete { color: #ef4444; }
+
+/* PIED DE PAGE */
+.back-footer { margin-top: 15px; text-align: center; }
+.btn-back {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center; gap: 6px;
+}

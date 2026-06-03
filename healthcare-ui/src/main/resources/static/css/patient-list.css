@@ -1,0 +1,163 @@
+/* ===============================================================
+   STYLE DE LA LISTE DES PATIENTS (DIMENSIONS COMPACTES & TITRES NAVY)
+   =============================================================== */
+
+/* MA CARTE : J'ai gardé la largeur de 780px pour qu'elle "flotte" sans toucher les bords */
+.glass-card-large {
+    width: 90%;
+    max-width: 780px;
+    padding: 20px 30px; /* Padding réduit pour éviter l'effet zoomé */
+}
+
+/* EN-TÊTE : Un titre sobre pour laisser la place aux données */
+.page-header {
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.page-header h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--text-white);
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    margin-top: 2px;
+}
+
+/* --- MES COMMANDES (RECHERCHE ET COMPTEUR) --- */
+.table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.search-wrapper {
+    position: relative;
+    flex: 1;
+    max-width: 220px;
+}
+
+.search-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    padding: 6px 10px 6px 30px;
+    border-radius: 8px;
+    color: white;
+    font-size: 0.75rem;
+    outline: none;
+    transition: 0.3s;
+}
+
+/* Mon effet de glow vert quand je cherche un patient */
+.search-input:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--medical-green);
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+}
+
+/* ===============================================================
+   MA ZONE DE SCROLL (Pour gérer une grande liste sans casser le design)
+   =============================================================== */
+.table-responsive {
+    max-height: 300px; /* Hauteur limitée pour garder la carte compacte */
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 5px;
+}
+
+/* MA BARRE DE SCROLL : Fine et de couleur médicale pour le style */
+.table-responsive::-webkit-scrollbar { width: 4px; }
+.table-responsive::-webkit-scrollbar-thumb {
+    background: var(--medical-green);
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Alignements pour équilibrer le tableau (Patient à gauche, Actions à droite, le reste au centre) */
+th:first-child, td:first-child { text-align: left; }
+th:nth-child(2), td:nth-child(2),
+th:nth-child(3), td:nth-child(3),
+th:nth-child(4), td:nth-child(4) { text-align: center; }
+th:last-child, td:last-child { text-align: right; }
+
+/* ===============================================================
+   TITRES DU TABLEAU : BLEU MARINE (Pour la touche institutionnelle)
+   =============================================================== */
+th {
+    padding: 12px 5px;
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+
+    /* J'ai choisi un bleu marine profond pour le sérieux du répertoire */
+    color: #1e3a8a;
+    font-weight: 800;
+
+    /* Effet Sticky Glass : le titre reste en haut pendant le scroll */
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(10px);
+    border-bottom: 1.5px solid rgba(30, 58, 138, 0.3);
+
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+td {
+    padding: 10px 5px;
+    color: var(--text-white);
+    font-size: 0.78rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* EFFET HOVER : J'éclaire la ligne au survol pour guider l'œil */
+tbody tr:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* MES BADGES ET BOUTONS ACTIONS */
+.doctor-badge {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-size: 0.65rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-view {
+    color: var(--medical-green);
+    background: rgba(16, 185, 129, 0.1);
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+.btn-view:hover {
+    background: var(--medical-green);
+    color: white;
+    transform: scale(1.1);
+}
+
+/* MON LIEN DE RETOUR */
+.btn-back {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.3s;
+}
+
+.btn-back:hover { color: white; }

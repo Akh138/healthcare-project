@@ -1,0 +1,103 @@
+/* ===============================================================
+   STYLE DE LA PAGE D'ATTENTE (VUE PATIENT - NO DOSSIER)
+   =============================================================== */
+
+/* MA CARTE : Format compact (480px) pour une lecture rapide et élégante */
+.glass-card-waiting {
+    width: 90%;
+    max-width: 480px;
+    padding: 40px;
+    text-align: center;
+}
+
+/* MON ICÔNE D'ATTENTE (Animée pour montrer que le système "vit") */
+.wait-icon-box {
+    width: 70px;
+    height: 70px;
+    background: #0f172a;
+    border: 2.5px solid var(--medical-green);
+    border-radius: 50%;
+    margin: 0 auto 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--medical-green);
+    font-size: 2rem;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+    animation: rotatePulse 3s infinite ease-in-out;
+}
+
+/* TITRE ET MESSAGE */
+h2 {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    margin-bottom: 30px;
+}
+
+.subtitle b {
+    color: var(--medical-green);
+}
+
+/* --- MON BLOC INFO (Style Glassmorphism Épuré) --- */
+.info-box-glass {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(16, 185, 129, 0.2); /* Bordure verte très fine */
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 35px;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+}
+
+.info-box-glass::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; width: 4px; height: 100%;
+    background: var(--medical-green); /* Petite barre de statut à gauche */
+}
+
+.info-text {
+    font-size: 0.85rem;
+    color: white;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.info-text i {
+    color: var(--medical-green);
+    margin-right: 8px;
+}
+
+/* BOUTON DÉCONNEXION (Toujours propre en bas) */
+.btn-logout-wait {
+    color: #f87171;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: 0.3s;
+    opacity: 0.8;
+}
+
+.btn-logout-wait:hover {
+    opacity: 1;
+    text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+}
+
+/* ANIMATION : Rotation + Pulsation douce */
+@keyframes rotatePulse {
+    0% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.1) rotate(10deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}

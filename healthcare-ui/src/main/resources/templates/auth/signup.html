@@ -3,58 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <title>Inscription Patient - Healthcare</title>
+    <!-- J'appelle ma base et mon style spécifique -->
     <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/signup.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<div class="container-card">
+
+<!-- MA CARTE EN VERRE (Format compact pour le contour) -->
+<div class="glass-card glass-card-signup">
+
+    <!-- MON LOGO MÉDICAL -->
     <div class="brand-icon">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 45px; height: 45px;">
-            <path d="M2 12H5L8 20L12 4L15 15L17 12H22" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 30px; height: 30px;">
+            <path d="M2 12H5L8 20L12 4L15 15L17 12H22" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
     </div>
 
-    <h2>Créer mon compte Patient</h2>
+    <h2>Créer mon compte</h2>
     <p class="subtitle">Accédez à votre dossier médical en ligne</p>
 
-    <form th:action="@{/signup}" th:object="${user}" method="post">
+    <!-- MON FORMULAIRE : th:object="${user}" comme ton original -->
+    <form th:action="@{/signup}" th:object="${user}" method="post" class="form-signup">
 
-        <!-- On force le rôle PATIENT de façon invisible pour que le contrôleur le reçoive bien -->
+        <!-- SÉCURITÉ : Je force le rôle PATIENT en caché -->
         <input type="hidden" th:field="*{role}" value="PATIENT" />
 
-        <!-- 1. Nom d'utilisateur -->
+        <!-- 1. NOM D'UTILISATEUR (username dans ton Java) -->
         <div class="input-group">
             <label>NOM D'UTILISATEUR</label>
-            <i class="fa-solid fa-user"></i>
+            <i class="fa-solid fa-user-tag"></i>
             <input type="text" th:field="*{username}" class="form-control" placeholder="Choisissez un pseudo" required />
         </div>
 
-        <!-- 2. Mot de passe -->
+        <!-- 2. MOT DE PASSE (password dans ton Java) -->
         <div class="input-group">
             <label>MOT DE PASSE</label>
             <i class="fa-solid fa-lock"></i>
             <input type="password" th:field="*{password}" class="form-control" placeholder="••••••••" required />
         </div>
 
-        <!-- 3. Choix du médecin (Obligatoire pour un patient) -->
+        <!-- 3. CHOIX DU MÉDECIN (selectedDoctor comme ton original) -->
         <div class="input-group">
             <label>VOTRE MÉDECIN RÉFÉRENT</label>
-            <i class="fa-solid fa-user-md"></i>
-            <select name="selectedDoctor" class="form-control" style="padding-left: 45px;" required>
+            <i class="fa-solid fa-user-doctor"></i>
+            <select name="selectedDoctor" class="form-control" required>
                 <option value="">-- Qui est votre médecin ? --</option>
                 <option th:each="doc : ${doctors}" th:value="${doc.username}" th:text="'Dr. ' + ${doc.username}"></option>
             </select>
         </div>
 
-        <button type="submit" class="btn-primary">CRÉER MON ACCÈS</button>
+        <!-- BOUTON DE CRÉATION -->
+        <button type="submit" class="btn-primary" style="width: 100%; padding: 15px; margin-top: 5px;">
+            <i class="fa-solid fa-user-check"></i> CRÉER MON ACCÈS
+        </button>
     </form>
 
+    <!-- LIEN RETOUR -->
     <div class="footer-link">
         Déjà inscrit ? <a href="/login">Se connecter</a>
     </div>
 </div>
-
-
 
 </body>
 </html>

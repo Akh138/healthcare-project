@@ -3,26 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Nouveau Patient - Healthcare</title>
+    <!-- J'utilise mon ADN commun et mon style spécifique à l'ajout patient -->
     <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/patient-add.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<div class="container-card" style="max-width: 550px;">
-    <!-- Logo Pouls Blanc sur fond Bleu -->
+
+<!-- MA CARTE VERSION ULTRA-COMPACTE (Pour voir tout le Glassmorphism) -->
+<div class="glass-card glass-card-add">
+
+    <!-- MON LOGO MÉDICAL -->
     <div class="brand-icon">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 35px; height: 35px;">
-            <path d="M2 12H5L8 20L12 4L15 15L17 12H22" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 25px; height: 25px;">
+            <path d="M2 12H5L8 20L12 4L15 15L17 12H22" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
     </div>
 
-    <h2>Nouveau Dossier Patient</h2>
-    <p class="subtitle">Veuillez remplir les informations du patient</p>
+    <h2>Nouveau Patient</h2>
+    <p class="subtitle">Création d'un dossier médical informatisé</p>
 
+    <!-- MON FORMULAIRE : Relié à l'objet patient du contrôleur -->
     <form th:action="@{/patients/add}" th:object="${patient}" method="post">
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <!-- GRILLE COMPACTE : NOM ET PRÉNOM -->
+        <div class="input-grid">
             <div class="input-group">
-                <label>Nom</label>
+                <label>Nom de famille</label>
                 <i class="fa-solid fa-id-card"></i>
                 <input type="text" th:field="*{lastName}" class="form-control" placeholder="NOM" required />
             </div>
@@ -33,25 +40,26 @@
             </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <!-- GRILLE COMPACTE : NAISSANCE ET GENRE -->
+        <div class="input-grid">
             <div class="input-group">
                 <label>Date de Naissance</label>
                 <i class="fa-solid fa-calendar-days"></i>
-                <!-- Utilisation du type="date" pour éviter les erreurs de format -->
                 <input type="date" th:field="*{birthday}" class="form-control" required />
             </div>
             <div class="input-group">
                 <label>Genre</label>
                 <i class="fa-solid fa-venus-mars"></i>
-                <select th:field="*{gender}" class="form-control" style="padding-left: 45px;">
-                    <option value="M">Masculin</option>
-                    <option value="F">Féminin</option>
+                <select th:field="*{gender}" class="form-control">
+                    <option value="M">Masculin (M)</option>
+                    <option value="F">Féminin (F)</option>
                 </select>
             </div>
         </div>
 
+        <!-- COORDONNÉES PLEINE LARGEUR -->
         <div class="input-group">
-            <label>Email</label>
+            <label>E-mail de contact</label>
             <i class="fa-solid fa-envelope"></i>
             <input type="email" th:field="*{email}" class="form-control" placeholder="patient@email.com" />
         </div>
@@ -59,21 +67,28 @@
         <div class="input-group">
             <label>Téléphone</label>
             <i class="fa-solid fa-phone"></i>
-            <input type="text" th:field="*{phone}" class="form-control" placeholder="06 00 00 00 00" />
+            <input type="text" th:field="*{phone}" class="form-control" placeholder="06 -- -- -- --" />
         </div>
 
         <div class="input-group">
-            <label>Adresse</label>
+            <label>Adresse de résidence</label>
             <i class="fa-solid fa-location-dot"></i>
-            <input type="text" th:field="*{address}" class="form-control" placeholder="Adresse complète" />
+            <input type="text" th:field="*{address}" class="form-control" placeholder="Ville, Rue..." />
         </div>
 
-        <button type="submit" class="btn-primary">CRÉER LE DOSSIER</button>
+        <!-- BOUTON DE VALIDATION (Vert Brillant) -->
+        <button type="submit" class="btn-primary btn-save">
+            <i class="fa-solid fa-folder-plus"></i> CRÉER LE DOSSIER
+        </button>
     </form>
 
-    <div class="footer-link">
-        <a href="/patients" style="color: var(--text-light);"><i class="fa-solid fa-arrow-left"></i> Annuler et retourner à la liste</a>
+    <!-- LIEN RETOUR -->
+    <div class="back-footer">
+        <a href="/patients" class="btn-back">
+            <i class="fa-solid fa-chevron-left"></i> Annuler et retourner à la liste
+        </a>
     </div>
 </div>
+
 </body>
 </html>

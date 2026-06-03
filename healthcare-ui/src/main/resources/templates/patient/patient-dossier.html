@@ -3,123 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <title>Dossier Médical - Healthcare</title>
+    <!-- Mon style commun et mon style dossier avec finitions Expert -->
     <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/patient-dossier.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { height: 100vh; overflow: hidden; display: flex; justify-content: center; padding-top: 50px; }
-        .grid-container { display: grid; grid-template-columns: 350px 1fr 350px; gap: 20px; width: 98%; max-width: 1550px; height: 90vh; }
-        .card-dossier { background: #fff; padding: 25px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow: hidden; }
-
-        /* EN-TÊTE : LOGO | NOM | PHOTO */
-        .patient-header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-        .identity-block { display: flex; align-items: center; gap: 12px; }
-        .brand-icon-small { width: 45px; height: 45px; background-color: var(--primary-blue); border-radius: 10px; display: flex; justify-content: center; align-items: center; color: white; animation: heartBeat 2s infinite; }
-
-        /* Carré Photo (Lecture seule pour le médecin) */
-        .photo-view-box {
-            width: 65px; height: 65px;
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .photo-view-box img { width: 100%; height: 100%; object-fit: cover; }
-
-        .scrollable-content { flex-grow: 1; overflow-y: auto; padding-right: 8px; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-
-        .note-item { background: #f8fafc; border-left: 4px solid var(--primary-blue); padding: 15px; border-radius: 0 12px 12px 0; margin-bottom: 12px; position: relative; }
-        .delete-note-btn { position: absolute; top: 10px; right: 10px; color: #fca5a5; cursor: pointer; }
-        .message-item { padding: 10px 15px; border-radius: 15px; max-width: 85%; font-size: 0.85rem; margin-bottom: 8px; }
-        .message-doctor { background: #f1f5f9; align-self: flex-end; }
-        .message-patient { background: var(--primary-blue); color: white; align-self: flex-start; }
-    </style>
 </head>
 <body>
 
-<div class="grid-container">
+<div class="glass-card glass-card-dossier">
 
-    <!-- COLONNE 1 : FICHE PATIENT -->
-    <aside class="card-dossier">
-        <div class="patient-header-top">
-            <div class="identity-block">
-                <div class="brand-icon">
-                    <!-- Icône Pouls Médical Moderne -->
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 45px; height: 45px;">
-                        <path d="M2 12H5L8 20L12 4L15 15L17 12H22" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
+    <!-- HEADER PATIENT HAUTE DÉFINITION -->
+    <header class="patient-header-bar">
+        <div class="profile-section">
+            <div class="photo-avatar">
+                <img th:if="${patient.profilePicture}" th:src="${patient.profilePicture}" alt="Photo">
+                <i th:unless="${patient.profilePicture}" class="fa-solid fa-user-shield"></i>
+            </div>
+            <div class="patient-titles">
+                <h1><span th:text="${patient.lastName.toUpperCase()}">NOM</span> <span th:text="${patient.firstName}">Prénom</span></h1>
+                <span><i class="fa-solid fa-folder-open"></i> Dossier Clinique #<span th:text="${patient.id}">00</span></span>
+            </div>
+        </div>
+
+        <div class="quick-stats">
+            <div class="stat-item">
+                <span class="stat-label">Naissance</span>
+                <span class="stat-value" th:text="${patient.birthday}">-</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Genre</span>
+                <span class="stat-value" th:text="${patient.gender}">-</span>
+            </div>
+            <div class="stat-item" style="border-right: none;">
+                <span class="stat-label">Statut</span>
+                <span class="stat-value" style="color: var(--medical-green);">● Actif</span>
+            </div>
+        </div>
+
+        <a href="/patients" class="btn-nav-back"><i class="fa-solid fa-arrow-left"></i> Retour</a>
+    </header>
+
+    <div class="workspace">
+
+        <!-- COLONNE 1 : COORDONNÉES AVEC ICÔNES ALIGNÉES -->
+        <aside class="work-col">
+            <div class="col-header"><i class="fa-solid fa-address-card"></i> Fiche Contact</div>
+
+            <div class="contact-item">
+                <i class="fa-solid fa-mobile-screen-button"></i>
                 <div>
-                    <h3 th:text="${patient.lastName.toUpperCase()}" style="margin: 0; font-size: 1.1rem;"></h3>
-                    <p th:text="${patient.firstName}" style="margin: 0; color: var(--text-light); font-size: 0.9rem;"></p>
+                    <span class="contact-label">Téléphone</span>
+                    <span class="contact-value" th:text="${patient.phone}">-</span>
                 </div>
             </div>
 
-            <!-- AFFICHAGE DE LA PHOTO ENREGISTRÉE PAR LE PATIENT -->
-            <div class="photo-view-box">
-                <img th:if="${patient.profilePicture}" th:src="${patient.profilePicture}" alt="Photo de profil"/>
-                <i th:unless="${patient.profilePicture}" class="fa-solid fa-user" style="color: #cbd5e1; font-size: 1.5rem;"></i>
-            </div>
-        </div>
-
-        <hr style="border: 0; border-top: 1px solid #f1f5f9; margin-bottom: 20px;">
-
-        <div style="display: flex; flex-direction: column; gap: 15px; font-size: 0.9rem;">
-            <p><i class="fa-solid fa-calendar" style="width: 25px; color: var(--primary-blue);"></i> <span th:text="${patient.birthday}"></span></p>
-            <p><i class="fa-solid fa-venus-mars" style="width: 25px; color: var(--primary-blue);"></i> <span th:text="${patient.gender}"></span></p>
-            <p><i class="fa-solid fa-phone" style="width: 25px; color: var(--primary-blue);"></i> <span th:text="${patient.phone}"></span></p>
-            <p><i class="fa-solid fa-envelope" style="width: 25px; color: var(--primary-blue);"></i> <span th:text="${patient.email}"></span></p>
-            <p><i class="fa-solid fa-map-marker-alt" style="width: 25px; color: var(--primary-blue);"></i> <span th:text="${patient.address}"></span></p>
-        </div>
-
-        <div style="margin-top: auto;">
-            <a href="/patients" class="footer-link" style="text-align: left;"><i class="fa-solid fa-arrow-left"></i> Retour Liste</a>
-        </div>
-    </aside>
-
-    <!-- COLONNE 2 : OBSERVATIONS -->
-    <main class="card-dossier">
-        <h2 style="text-align: center; font-size: 1.3rem;"><i class="fa-solid fa-notes-medical"></i> Observations</h2>
-        <form th:action="@{'/patients/notes/add/' + ${patient.id}}" th:object="${newNote}" method="post" style="margin-bottom: 20px;">
-            <textarea th:field="*{content}" class="form-control" style="height: 70px; padding-left: 15px; margin-bottom: 10px;" placeholder="Ajouter une observation..." required></textarea>
-            <button type="submit" class="btn-primary" style="padding: 10px 20px;">Enregistrer</button>
-        </form>
-
-        <div class="scrollable-content">
-            <div th:each="n : ${notes}" class="note-item">
-                <a th:href="@{'/patients/notes/delete/' + ${n.id} + '/' + ${patient.id}}" onclick="return confirm('Supprimer ?')" class="delete-note-btn">
-                    <i class="fa-solid fa-trash-can"></i>
-                </a>
-                <div style="font-size: 0.75rem; font-weight: 700; margin-bottom: 5px;">
-                    <span th:text="${n.doctorName}"></span>
-                    <span style="color: var(--text-light); font-weight: 400; margin-left: 10px;" th:text="${#temporals.format(n.date, 'dd/MM/yyyy HH:mm')}"></span>
+            <div class="contact-item">
+                <i class="fa-solid fa-envelope-open-text"></i>
+                <div>
+                    <span class="contact-label">E-mail</span>
+                    <span class="contact-value" th:text="${patient.email}" style="font-size: 0.8rem;">-</span>
                 </div>
-                <p th:text="${n.content}" style="margin: 0; font-size: 0.9rem; color: #475569;"></p>
             </div>
-        </div>
-    </main>
 
-    <!-- COLONNE 3 : DISCUSSION -->
-    <section class="card-dossier">
-        <h2 style="text-align: center; font-size: 1.1rem; margin-bottom: 15px;"><i class="fa-solid fa-comments"></i> Discussion</h2>
-        <div class="scrollable-content" style="display: flex; flex-direction: column; gap: 8px;">
-            <div th:each="m : ${messages}"
-                 th:classappend="${m.senderName.startsWith('Dr.') ? 'message-doctor' : 'message-patient'}"
-                 class="message-item">
-                <div style="font-size: 0.6rem; font-weight: 700; opacity: 0.7;" th:text="${m.senderName}"></div>
-                <div th:text="${m.content}"></div>
+            <div class="contact-item">
+                <i class="fa-solid fa-map-location-dot"></i>
+                <div>
+                    <span class="contact-label">Adresse</span>
+                    <span class="contact-value" th:text="${patient.address}" style="line-height: 1.4;">-</span>
+                </div>
             </div>
-        </div>
-        <form th:action="@{'/patients/messages/add/' + ${patient.id}}" th:object="${newMessage}" method="post" style="margin-top: 15px;">
-            <div style="display: flex; gap: 8px;">
-                <input type="text" th:field="*{content}" class="form-control" style="padding-left: 15px; margin-bottom: 0;" placeholder="Message..." required>
-                <button type="submit" class="btn-primary" style="width: 45px; margin-top: 0;"><i class="fa-solid fa-paper-plane"></i></button>
-            </div>
-        </form>
-    </section>
+        </aside>
 
+        <!-- COLONNE 2 : HISTORIQUE -->
+        <main class="work-col">
+            <div class="col-header"><i class="fa-solid fa-stethoscope"></i> Journal Clinique</div>
+
+            <div class="timeline-scroll">
+                <div class="note-entry">
+                    <form th:action="@{'/patients/notes/add/' + ${patient.id}}" th:object="${newNote}" method="post">
+                        <textarea th:field="*{content}" placeholder="Saisir une observation clinique..." required style="height: 55px; width: 100%; background:none; border:none; color:white; outline:none; font-size: 0.85rem;"></textarea>
+                        <div style="text-align: right; margin-top: 10px;">
+                            <button type="submit" class="btn-primary" style="padding: 7px 20px; font-size: 0.7rem;">ENREGISTRER</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Liste des notes -->
+                <div th:each="n : ${notes}" class="timeline-card">
+                    <div class="note-bubble">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="font-size: 0.7rem; font-weight: 900; color: var(--medical-green);" th:text="${n.doctorName}">DR</span>
+                            <span style="font-size: 0.65rem; font-weight: 800; color: #0a192f;" th:text="${#temporals.format(n.date, 'dd/MM/yy HH:mm')}">DATE</span>
+                        </div>
+                        <p style="margin:0; font-size: 0.85rem; color: white;" th:text="${n.content}">Note...</p>
+                        <a th:href="@{'/patients/notes/delete/' + ${n.id} + '/' + ${patient.id}}" style="display:block; text-align:right; color: #ef4444; font-size: 0.65rem; margin-top: 10px; opacity: 0.5;"><i class="fa-solid fa-trash"></i> Supprimer</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- COLONNE 3 : MESSAGES -->
+        <section class="work-col">
+            <div class="col-header"><i class="fa-solid fa-comment-medical"></i> Messagerie</div>
+
+            <div class="chat-messages">
+                <div th:each="m : ${messages}" th:classappend="${m.senderName.startsWith('Dr.') ? 'msg-dr' : 'msg-pt'}" class="msg">
+                    <div th:text="${m.content}">Message</div>
+                </div>
+            </div>
+
+            <form th:action="@{'/patients/messages/add/' + ${patient.id}}" th:object="${newMessage}" method="post" style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 10px; margin-top: 15px; display: flex; gap: 10px; border: 1px solid rgba(255,255,255,0.1);">
+                <input type="text" th:field="*{content}" placeholder="Message..." required style="background:none; border:none; color:white; outline:none; font-size: 0.8rem; width:100%;">
+                <button type="submit" style="background:none; border:none; color: var(--medical-green); cursor:pointer;"><i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+        </section>
+
+    </div>
 </div>
+
 </body>
 </html>

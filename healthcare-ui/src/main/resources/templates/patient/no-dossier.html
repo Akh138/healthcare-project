@@ -3,29 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>En attente - Healthcare</title>
+    <!-- J'utilise mon ADN commun et mon style d'attente spécifique -->
     <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/no-dossier.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body style="display: flex; flex-direction: column; align-items: center; padding-top: 100px;">
+<body>
 
-<div class="container-card" style="max-width: 500px; text-align: center;">
-    <div class="brand-icon" style="background-color: #fef3c7; margin-bottom: 20px;">
-        <!-- Une icône d'horloge pour dire que c'est en cours -->
-        <i class="fa-solid fa-clock-rotate-left" style="color: #d97706; font-size: 2rem;"></i>
+<!-- MA CARTE VERSION GLASS (Pour rassurer le patient) -->
+<div class="glass-card glass-card-waiting">
+
+    <!-- MON ICÔNE D'ATTENTE ANIMÉE -->
+    <div class="wait-icon-box">
+        <i class="fa-solid fa-clock-rotate-left"></i>
     </div>
 
     <h2>Dossier en attente</h2>
-    <p class="subtitle">Bonjour <span th:text="${#authentication.name}">Pseudo</span> ! Votre compte est créé avec succès.</p>
+    <p class="subtitle">Bonjour <b><span th:text="${#authentication.name}">Pseudo</span></b> ! <br>Votre compte a bien été créé.</p>
 
-    <div style="margin-top: 30px; padding: 20px; background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 12px;">
-        <p style="font-size: 0.9rem; color: #92400e; line-height: 1.5;">
-            <i class="fa-solid fa-circle-info"></i> Votre inscription est en attente de validation.
-            Votre médecin doit maintenant initialiser votre dossier médical avant que vous puissiez y accéder.
+    <!-- MON MESSAGE D'INFORMATION ÉPURÉ -->
+    <div class="info-box-glass">
+        <p class="info-text">
+            <i class="fa-solid fa-shield-halved"></i>
+            Votre inscription est actuellement en cours de vérification.
+            Dès que votre médecin aura initialisé votre dossier médical,
+            vous recevrez un accès complet à votre espace santé.
         </p>
     </div>
 
-    <div class="footer-link" style="margin-top: 30px;">
-        <a href="/logout" style="color: #ef4444; font-weight: 600;"><i class="fa-solid fa-power-off"></i> Se déconnecter</a>
+    <!-- LIEN DE SORTIE SÉCURISÉ -->
+    <div class="footer-link">
+        <a href="/logout" class="btn-logout-wait">
+            <i class="fa-solid fa-power-off"></i> Se déconnecter
+        </a>
     </div>
 </div>
 

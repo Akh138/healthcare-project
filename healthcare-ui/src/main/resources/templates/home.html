@@ -3,66 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <title>Accueil - Healthcare</title>
+    <!-- J'appelle mes deux fichiers CSS pour l'organisation -->
     <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<div class="container-card" style="max-width: 500px;">
 
-    <div class="brand-icon">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 35px; height: 35px;">
-            <path d="M2 12H5L8 20L12 4L15 15L17 12H22" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- MA CARTE DASHBOARD (Format compact géré par home.css) -->
+<div class="glass-card glass-card-home">
+
+    <!-- MON LOGO MÉDICAL -->
+    <div class="brand-icon-small">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 12H5L8 20L12 4L15 15L17 12H22" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
     </div>
 
-    <!-- Bienvenue avec le pseudo de la personne connectée -->
-    <h2>Bienvenue, Dr. <span sec:authentication="name">Nom</span></h2>
-    <p class="subtitle">Session sécurisée - Espace <span th:text="${#authentication.authorities[0].authority == 'ROLE_ADMIN' ? 'Administrateur' : 'Médical'}">Rôle</span></p>
+    <!-- TITRE BIENVENUE : Nom en blanc pour plus de classe -->
+    <h2 class="welcome-title">Bienvenue,<br>
+        <span class="welcome-name" sec:authentication="name">Admin</span>
+    </h2>
 
-    <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px;">
+    <p class="subtitle">
+        <i class="fa-solid fa-shield-check" style="color: var(--medical-green);"></i> Espace
+        <span th:text="${#authentication.authorities[0].authority == 'ROLE_ADMIN' ? 'Administrateur' : 'Médical'}">Rôle</span>
+    </p>
 
-        <!-- BOUTONS RÉSERVÉS AUX DOCTEURS -->
-        <div sec:authorize="hasRole('DOCTOR')" style="display: flex; flex-direction: column; gap: 15px;">
+    <div class="menu-container">
 
-            <!-- Bouton pour voir ma liste de patients habituelle -->
-            <a href="/patients" class="btn-primary" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 12px;">
+        <!-- SECTION RÉSERVÉE À L'ADMINISTRATEUR -->
+        <div sec:authorize="hasRole('ADMIN')" class="menu-container">
+            <p class="admin-section-label">Administration du système</p>
+
+            <a href="/admin/users" class="btn-nav btn-green-1">
+                <i class="fa-solid fa-user-doctor"></i> Liste des Médecins
+            </a>
+
+            <a href="/admin/patients-all" class="btn-nav btn-green-2">
+                <i class="fa-solid fa-users-gear"></i> Gestion des Patients
+            </a>
+
+            <a href="/admin/signup" class="btn-nav btn-green-3">
+                <i class="fa-solid fa-user-plus"></i> Inscrire un compte
+            </a>
+        </div>
+
+        <!-- SECTION RÉSERVÉE AUX DOCTEURS -->
+        <div sec:authorize="hasRole('DOCTOR')" class="menu-container">
+            <a href="/patients" class="btn-nav btn-green-1">
                 <i class="fa-solid fa-hospital-user"></i> Gérer mes Patients
             </a>
 
-            <!-- NOUVEAU BOUTON : Pour valider les nouveaux patients qui se sont inscrits -->
-            <a href="/patients/requests" class="btn-primary" style="background-color: #2980b9; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 12px;">
-                <i class="fa-solid fa-user-check"></i> Demandes d'inscription
+            <a href="/patients/requests" class="btn-nav btn-green-2">
+                <i class="fa-solid fa-clipboard-list"></i> Demandes d'inscription
             </a>
 
-            <!-- Bouton pour le planning -->
-            <a href="/consultations" class="btn-primary" style="background-color: #34495e; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 12px;">
-                <i class="fa-solid fa-calendar-check"></i> Mon Planning
-            </a>
-        </div>
-
-        <!-- SECTION ADMINISTRATION : visible seulement pour l'ADMIN -->
-        <div sec:authorize="hasRole('ADMIN')" style="display: flex; flex-direction: column; gap: 15px;">
-            <p style="font-weight: 700; font-size: 0.75rem; color: #64748b; text-transform: uppercase; margin: 0; text-align: center;">Administration</p>
-
-            <a href="/admin/users" class="btn-primary" style="background-color: #2c3e50; text-decoration: none; text-align: center;">
-                <i class="fa-solid fa-user-shield"></i> Liste des Médecins
-            </a>
-
-            <a href="/admin/patients-all" class="btn-primary" style="background-color: #2c3e50; text-decoration: none; text-align: center;">
-                <i class="fa-solid fa-users"></i> Gestion des Patients
-            </a>
-
-            <!-- Bouton pour que l'admin crée des comptes médecins/admins -->
-            <a href="/admin/signup" class="btn-primary" style="background-color: #16a085; text-decoration: none; text-align: center;">
-                <i class="fa-solid fa-user-plus"></i> Inscrire un Medecin ou Admin
+            <a href="/consultations" class="btn-nav btn-green-3">
+                <i class="fa-solid fa-calendar-days"></i> Mon Planning
             </a>
         </div>
 
     </div>
 
-    <div class="footer-link">
-        <a href="/logout" style="color: #ef4444; font-weight: 600;"><i class="fa-solid fa-power-off"></i> Se déconnecter</a>
-    </div>
+    <!-- LIEN DE SORTIE -->
+    <a href="/logout" class="logout-btn">
+        <i class="fa-solid fa-power-off"></i> Se déconnecter
+    </a>
 </div>
+
 </body>
 </html>

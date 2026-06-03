@@ -3,32 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Connexion - Healthcare</title>
+
+    <!-- 1. J'appelle la base (fond, boutons, verre) -->
     <link rel="stylesheet" th:href="@{/css/common.css}">
-    <!-- Ajout des icônes FontAwesome -->
+    <!-- 2. J'appelle le style spécifique aux formulaires de login -->
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<div class="container-card">
-    <!-- Petit logo médical -->
+
+<!-- MA CARTE (J'utilise .glass-card défini dans common.css) -->
+<div class="glass-card">
+
+    <!-- MON LOGO MÉDICAL -->
     <div class="brand-icon">
-        <!-- Icône Pouls Médical Moderne -->
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 45px; height: 45px;">
-            <path d="M2 12H5L8 20L12 4L15 15L17 12H22" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 35px; height: 35px;">
+            <path d="M2 12H5L8 20L12 4L15 15L17 12H22" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
     </div>
 
-    <h2>Bienvenue</h2>
-    <p class="subtitle">Espace sécurisé pour les professionnels</p>
+    <h2 class="login-title">Bienvenue</h2>
 
     <form th:action="@{/login}" method="post">
+        <!-- CHAMP NOM -->
         <div class="input-group">
-            <label>UTILISATEUR</label>
             <i class="fa-solid fa-user"></i>
             <input type="text" name="username" class="form-control" placeholder="Votre nom" required />
         </div>
 
+        <!-- CHAMP MOT DE PASSE -->
         <div class="input-group">
-            <label>MOT DE PASSE</label>
             <i class="fa-solid fa-lock"></i>
             <input type="password" name="password" class="form-control" placeholder="••••••••" required />
         </div>
@@ -36,9 +41,11 @@
         <button type="submit" class="btn-primary">SE CONNECTER</button>
     </form>
 
-    <div class="footer-link">
+    <!-- LIEN BAS DE PAGE -->
+    <div class="signup-link">
         Nouveau sur la plateforme ? <a href="/signup">Créer un compte</a>
     </div>
 </div>
+
 </body>
 </html>

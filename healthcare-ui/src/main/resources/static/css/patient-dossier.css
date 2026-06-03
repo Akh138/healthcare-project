@@ -1,0 +1,97 @@
+/* ===============================================================
+   STYLE DU DOSSIER MÉDICAL (FINITIONS HAUTE PRÉCISION)
+   =============================================================== */
+
+.glass-card-dossier {
+    width: 98%;
+    max-width: 1250px;
+    height: 88vh; /* Légèrement plus haut pour le confort */
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin-top: -20px;
+}
+
+/* --- HEADER PATIENT --- */
+.patient-header-bar {
+    padding: 20px 35px;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1.5px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.profile-section { display: flex; align-items: center; gap: 20px; }
+
+/* Avatar High-Tech */
+.photo-avatar {
+    width: 65px; height: 65px;
+    border-radius: 16px;
+    border: 2.5px solid var(--medical-green);
+    background: #0f172a;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+}
+.photo-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 13px; }
+.photo-avatar i { color: var(--medical-green); font-size: 1.8rem; }
+
+.patient-titles h1 { font-size: 1.4rem; color: white; margin: 0; font-weight: 700; }
+.patient-titles span { font-size: 0.7rem; color: var(--medical-green); font-weight: 900; text-transform: uppercase; }
+
+/* --- STATS DU HAUT --- */
+.stat-item { display: flex; flex-direction: column; border-left: 1px solid rgba(255, 255, 255, 0.1); padding-left: 20px; }
+.stat-label { font-size: 0.65rem; text-transform: uppercase; color: #0a192f; font-weight: 900; letter-spacing: 1.2px; }
+.stat-value { font-size: 1rem; color: white; font-weight: 700; }
+
+/* --- GRID DE TRAVAIL --- */
+.workspace {
+    display: grid;
+    grid-template-columns: 280px 1fr 310px;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.work-col {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1.5px solid rgba(255, 255, 255, 0.05);
+}
+.work-col:last-child { border-right: none; }
+
+.col-header {
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: #0a192f;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+    display: flex; align-items: center; gap: 12px;
+}
+
+/* --- CONTACT ET COORDONNÉES --- */
+.contact-item { margin-bottom: 22px; display: flex; align-items: flex-start; gap: 12px; }
+.contact-item i { color: #0a192f; font-size: 0.9rem; margin-top: 2px; width: 15px; }
+.contact-label { font-size: 0.6rem; color: #0a192f; font-weight: 900; text-transform: uppercase; display: block; margin-bottom: 4px; }
+.contact-value { color: white; font-weight: 600; font-size: 0.9rem; word-break: break-all; }
+
+/* --- TIMELINE ET NOTES --- */
+.timeline-scroll { flex-grow: 1; overflow-y: auto; padding-right: 10px; }
+.note-entry { background: rgba(0, 0, 0, 0.2); border-radius: 15px; padding: 15px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); }
+
+.timeline-card { border-left: 2px solid rgba(16, 185, 129, 0.4); padding-left: 20px; margin-left: 5px; margin-bottom: 25px; position: relative; }
+.timeline-card::before { content: ''; position: absolute; left: -6px; top: 0; width: 10px; height: 10px; background: var(--medical-green); border-radius: 50%; box-shadow: 0 0 10px var(--medical-green); }
+
+.note-bubble { background: rgba(255, 255, 255, 0.04); padding: 15px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.05); }
+
+/* --- MESSAGERIE --- */
+.chat-messages { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+.msg { padding: 12px 16px; border-radius: 16px; font-size: 0.85rem; max-width: 88%; line-height: 1.5; }
+.msg-dr { align-self: flex-end; background: var(--medical-green); color: #0a192f; font-weight: 700; border-bottom-right-radius: 2px; }
+.msg-pt { align-self: flex-start; background: rgba(255, 255, 255, 0.1); color: white; border-bottom-left-radius: 2px; }
+
+/* BOUTON RETOUR */
+.btn-nav-back { background: rgba(255,255,255,0.05); padding: 8px 18px; border-radius: 12px; color: white; text-decoration: none; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
+.btn-nav-back:hover { background: white; color: #0a192f; }

@@ -1,0 +1,116 @@
+/* ===============================================================
+   STYLE DU DASHBOARD (HOME) - VERSION COMPACTE PRO
+   =============================================================== */
+
+/* MA CARTE DASHBOARD : J'ai réduit la taille pour ne plus avoir l'effet "zoomé" et bien voir le contour */
+.glass-card-home {
+    width: 90%;
+    max-width: 460px; /* Taille réduite pour l'élégance */
+    padding: 30px 40px;
+}
+
+/* LE LOGO : Un peu plus petit pour gagner de la place */
+.brand-icon-small {
+    width: 60px;
+    height: 60px;
+    background: #0f172a;
+    border: 2px solid var(--medical-green);
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+}
+
+.brand-icon-small svg path {
+    stroke: var(--medical-green) !important;
+}
+
+/* TITRES : Plus fins pour ne pas charger l'écran */
+.welcome-title {
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 600;
+    font-size: 1.5rem; /* Taille réduite */
+    margin-bottom: 2px;
+    color: var(--text-white);
+}
+
+.welcome-name {
+    color: var(--text-white);
+    opacity: 0.9;
+}
+
+.subtitle {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-bottom: 25px; /* Espace réduit */
+    letter-spacing: 1px;
+}
+
+/* LABEL ADMINISTRATION : Discret et pro */
+.admin-section-label {
+    font-weight: 700;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin: 5px 0 12px 0;
+    letter-spacing: 2px;
+}
+
+/* CONTENEUR DES BOUTONS : Centrage parfait */
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px; /* Espace entre les boutons réduit */
+    width: 100%;
+}
+
+/* MES BOUTONS : Taille unique et alignement parfait pour un look symétrique */
+.btn-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 320px; /* Largeur de bouton plus adaptée */
+    padding: 14px; /* Un peu moins haut */
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: 0.3s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-nav:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+    filter: brightness(1.1);
+}
+
+/* NUANCES MÉDICALES : J'ai gardé les 3 dégradés de vert pour la hiérarchie */
+.btn-green-1 { background: linear-gradient(135deg, #0d9488, #10b981); }
+.btn-green-2 { background: linear-gradient(135deg, #10b981, #34d399); }
+.btn-green-3 { background: linear-gradient(135deg, #34d399, #6ee7b7); }
+
+/* BOUTON DÉCONNEXION : Discret en bas */
+.logout-btn {
+    margin-top: 25px;
+    display: inline-block;
+    color: #ef4444;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: 0.3s;
+}
+
+.logout-btn:hover {
+    color: #f87171;
+    text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+}

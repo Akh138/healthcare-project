@@ -3,51 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <title>Gestion Médecins - Admin</title>
+    <!-- J'utilise mes deux fichiers CSS pour garder la même identité visuelle partout -->
     <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/user-list.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body style="display: flex; flex-direction: column; align-items: center; padding-top: 50px;">
+<body>
 
-<div class="container-large">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <div>
+<!-- MA VITRE PRINCIPALE (Format Compact 780px) -->
+<div class="glass-card glass-card-large">
 
-            <h2 style="text-align: left; margin: 0;">Gestion des Médecins</h2>
-            <p style="color: var(--text-light); margin: 5px 0 0 0; font-size: 0.9rem;">Liste des médecins inscrits sur la plateforme</p>
+    <!-- EN-TÊTE MÉDICALE -->
+    <div class="page-header">
+        <h2><i class="fa-solid fa-user-shield" style="color: var(--medical-green); margin-right: 10px;"></i>Gestion des Médecins</h2>
+        <p class="subtitle">Administration des accès praticiens</p>
+    </div>
+
+    <!-- MES COMMANDES : Recherche et Compteur -->
+    <div class="table-controls">
+        <div class="search-wrapper">
+            <i class="fa-solid fa-magnifying-glass" style="color: var(--medical-green);"></i>
+            <input type="text" id="doctorSearch" class="search-input" placeholder="Rechercher un médecin...">
+        </div>
+
+        <div class="count-info" style="font-size: 0.7rem; color: var(--text-dim);">
+            Nombre de médecins inscrits : <span th:text="${users.size()}" style="color: var(--medical-green); font-weight: 700;">0</span>
         </div>
     </div>
 
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th><i class="fa-solid fa-user-doctor"></i> Nom d'utilisateur</th>
-            <th><i class="fa-solid fa-shield-halved"></i> Rôle</th>
-            <th style="text-align: center;">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- On boucle sur la liste "users" qui ne contient plus que des médecins maintenant -->
-        <tr th:each="u : ${users}">
-            <td th:text="${u.id}"></td>
-            <td th:text="${u.username}" style="font-weight: 600;"></td>
-            <td><span class="badge" th:text="${u.role}"></span></td>
-            <td style="text-align: center;">
-                <a th:href="@{'/admin/users/delete/' + ${u.id}}"
-                   onclick="return confirm('Supprimer ce compte médecin ?')"
-                   style="text-decoration: none;">
-                    <i class="fa-solid fa-trash-can" style="color: #e74c3c;"></i>
-                </a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <!-- ZONE DE TABLEAU AVEC SCROLL INTERNE -->
+    <div class="table-responsive">
+        <table id="doctorTable">
+            <thead>
+            <tr>
+                <th style="width: 60px;">ID</th>
+                <th>Utilisateur</th>
+                <th>Rôle</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Boucle Thymeleaf : j'affiche chaque médecin dynamiquement -->
+            <tr th:each="user : ${users}">
+                <td style="color: var(--text-dim); font-family: monospace;">#<span th:text="${user.id}">3</span></td>
+                <td class="doctor-name">
+                    <i class="fa-solid fa-circle-user" style="margin-right: 8px; opacity: 0.4;"></i>
+                    <span th:text="${user.username}" style="font-weight: 600;">Dr. Smith</span>
+                </td>
+                <td>
+                    <span class="role-badge" th:text="${user.role}">DOCTOR</span>
+                </td>
+                <td>
+                    <div style="display: flex; justify-content: flex-end;">
+                        <form th:action="@{/admin/users/delete/{id}(id=${user.id})}" method="post" onsubmit="return confirm('Supprimer ce compte définitivement ?');">
+                            <button type="submit" class="btn-delete">
+                                <i class="fa-solid fa-trash-can" style="font-size: 0.8rem;"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <div style="margin-top: 30px; border-top: 1px solid #f1f5f9; padding-top: 20px;">
-        <a href="/home" style="text-decoration: none; color: var(--text-light); font-weight: 600; display: flex; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+    <!-- BOUTON RETOUR -->
+    <div class="back-footer">
+        <a href="/home" class="btn-back">
+            <i class="fa-solid fa-chevron-left"></i> Retour au tableau de bord
         </a>
     </div>
 </div>
+
+<!-- MON FILTRE MAGIQUE (JS) -->
+<script>
+    document.getElementById('doctorSearch').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#doctorTable tbody tr');
+
+        rows.forEach(row => {
+            let name = row.querySelector('.doctor-name').textContent.toLowerCase();
+            row.style.display = name.includes(filter) ? "" : "none";
+        });
+    });
+</script>
+
 </body>
 </html>
