@@ -99,3 +99,80 @@ body::before {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
+/* ===============================================================
+   MA STRATÉGIE MOBILE GLOBALE (VERSION FINALE CORRIGÉE)
+   =============================================================== */
+
+@media (max-width: 600px) {
+
+    /* 1. ADAPTATION DES VITRES */
+    .glass-card, .glass-card-large, .glass-card-home,
+    .glass-card-signup, .glass-card-update, .glass-card-planning,
+    .glass-card-patient, .glass-card-error, .login-container {
+        width: 95% !important;
+        max-width: 95% !important;
+        padding: 20px 15px !important;
+        border-radius: 20px !important;
+        margin-top: 10px !important;
+    }
+
+    /* 2. OPTIMISATION DES TITRES */
+    h2, .welcome-title, .login-title {
+        font-size: 1.2rem !important;
+        letter-spacing: 1px !important;
+    }
+
+    /* 3. ALIGNEMENT DES LISTES ET RECHERCHE (Correction de l'icône) */
+    .table-controls {
+        flex-direction: column !important;
+        gap: 10px !important;
+        align-items: center !important; /* On centre tout sur mobile */
+    }
+
+    .search-wrapper {
+        max-width: 100% !important;
+        width: 100% !important;
+        position: relative !important; /* Force le parent */
+    }
+
+    /* RÉPARATION : Je force l'icône à rester DANS la barre */
+    .search-wrapper i {
+        position: absolute !important;
+        top: 50% !important;
+        left: 12px !important;
+        transform: translateY(-50%) !important;
+        margin: 0 !important;
+    }
+
+    .count-info {
+        font-size: 0.65rem !important;
+        width: 100% !important;
+        text-align: right !important; /* Le total s'aligne proprement à droite */
+    }
+
+    /* 4. PASSAGE DES GRILLES SUR UNE SEULE COLONNE */
+    .input-grid, .workspace, .main-workspace, .workspace-grid, .dossier-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+
+    /* 5. BOUTONS */
+    .btn-nav, .btn-primary, .btn-secondary {
+        max-width: 100% !important;
+        padding: 12px !important;
+        font-size: 0.8rem !important;
+    }
+
+    /* 6. TABLEAUX */
+    .table-responsive {
+        overflow-x: auto !important;
+        padding-bottom: 10px !important;
+    }
+
+    /* 7. DOSSIER PATIENT (L'identité) */
+    .patient-header-bar {
+        flex-direction: column !important;
+        gap: 15px !important;
+        text-align: center !important;
+    }
+}
