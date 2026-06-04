@@ -2,8 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <!-- MA LIGNE MOBILE : Pour garantir que ma vitre reste belle sur tous les écrans -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Gestion Médecins - Admin</title>
+
     <!-- J'utilise mes deux fichiers CSS pour garder la même identité visuelle partout -->
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/user-list.css}">
@@ -11,7 +14,7 @@
 </head>
 <body>
 
-<!-- MA VITRE PRINCIPALE (Format Compact 780px) -->
+<!-- MA VITRE PRINCIPALE (Format Compact 780px validé) -->
 <div class="glass-card glass-card-large">
 
     <!-- EN-TÊTE MÉDICALE -->
@@ -56,11 +59,14 @@
                 </td>
                 <td>
                     <div style="display: flex; justify-content: flex-end;">
-                        <form th:action="@{/admin/users/delete/{id}(id=${user.id})}" method="post" onsubmit="return confirm('Supprimer ce compte définitivement ?');">
-                            <button type="submit" class="btn-delete">
-                                <i class="fa-solid fa-trash-can" style="font-size: 0.8rem;"></i>
-                            </button>
-                        </form>
+                        <!-- RÉPARATION : J'utilise un lien <a> au lieu d'un <form> pour envoyer une requête GET.
+                             Cela règle l'erreur 405 tout en gardant mon superbe design de bouton rouge. -->
+                        <a th:href="@{/admin/users/delete/{id}(id=${user.id})}"
+                           class="btn-delete"
+                           onclick="return confirm('Supprimer ce compte définitivement ?');"
+                           style="text-decoration: none;">
+                            <i class="fa-solid fa-trash-can" style="font-size: 0.8rem;"></i>
+                        </a>
                     </div>
                 </td>
             </tr>
