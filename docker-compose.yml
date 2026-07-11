@@ -23,7 +23,7 @@ services:
     image: mongo:latest
     container_name: healthcare-mongodb
     ports:
-      - "27017:27017"
+      - "27019:27017"
     volumes:
       - mongodb_data:/data/db
     healthcheck:
@@ -31,7 +31,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 30s
+      start_period: 60s
 
   # --- ANNUAIRE DES SERVICES (Consul) ---
   consul:

@@ -34,7 +34,7 @@ public class PatientControllerTest {
     @MockBean
     private PatientService patientService;
 
-    @Autowired
+    @Autowired //  @Autowired nest plus deprecié il vaut mieux utilisé : @AllArgsConstructor @RequiredArgConstructor
     private ObjectMapper objectMapper;
 
     @Test
